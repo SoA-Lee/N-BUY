@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/N-BUY
+    username: nbuy
+    password: a1234
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: H2
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  mvc:
+    static-path-pattern: /static/**
+    pathmatch:
+      matching-strategy: ant_path_matcher
