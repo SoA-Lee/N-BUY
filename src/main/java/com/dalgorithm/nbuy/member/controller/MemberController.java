@@ -5,6 +5,7 @@ import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.model.MemberInput;
 import com.dalgorithm.nbuy.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -43,7 +45,7 @@ public class MemberController {
     public String emailAuth(Model model, HttpServletRequest request) {
 
         String uuid = request.getParameter("id");
-        System.out.println(uuid);
+        log.info(uuid);
 
         boolean result = memberService.emailAuth(uuid);
         model.addAttribute("result", result);

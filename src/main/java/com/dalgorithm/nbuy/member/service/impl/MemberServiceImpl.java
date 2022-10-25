@@ -36,18 +36,16 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> optionalMember = memberRepository.findById(memberInput.getUserId());
         if (optionalMember.isPresent()) {
-            //현재 userId에 해당하는 데이터 존재
             return false;
         }
 
         String encPassword = BCrypt.hashpw(memberInput.getPassword(), BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
 
-        // input 값 못가져오는 부분 확인하기
         Member member = Member.builder()
                 .userId(memberInput.getUserId())
                 .userName(memberInput.getUserName())
-                .userNickname(memberInput.getUserNickname())
+                .userEmail(memberInput.getUserEmail())
                 .phone(memberInput.getPhone())
                 .password(encPassword)
                 .userRole(0)
@@ -57,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
         memberRepository.save(member);
 
-        String email = memberInput.getUserId();
+        String email = memberInput.getUserEmail();
         String subject = "[N-BUY] 사이트 가입을 축하드립니다. ";
         String text = "<p>N-BUY 사이트 가입을 축하드립니다.<p><p>아래 링크를 클릭하셔서 가입을 완료 하세요.</p>"
                 + "<div><a target='_blank' href='http://localhost:8080/member/email_auth?id=" + uuid + "'> 가입 완료 </a></div>";

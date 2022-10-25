@@ -9,7 +9,7 @@ public class MemberInput {
 
     private String userId;
     private String userName;
-    private String userNickname;
+    private String userEmail;
     private String phone;
     private String password;
 
