@@ -1,11 +1,11 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
+import com.dalgorithm.nbuy.common.Exception.NbuyException;
 import com.dalgorithm.nbuy.common.ServiceResult;
+import com.dalgorithm.nbuy.common.type.ErrorCode;
 import com.dalgorithm.nbuy.member.components.MailComponents;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
-import com.dalgorithm.nbuy.member.exception.MemberNotEmailAuthException;
-import com.dalgorithm.nbuy.member.exception.MemberStopUserException;
 import com.dalgorithm.nbuy.member.model.MemberInput;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import com.dalgorithm.nbuy.member.service.MemberService;
@@ -36,18 +36,16 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> optionalMember = memberRepository.findById(memberInput.getUserId());
         if (optionalMember.isPresent()) {
-            //현재 userId에 해당하는 데이터 존재
-            return false;
+            throw new NbuyException(ErrorCode.MEMBER_ALREADY_EXIST);
         }
 
         String encPassword = BCrypt.hashpw(memberInput.getPassword(), BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
 
-        // input 값 못가져오는 부분 확인하기
         Member member = Member.builder()
                 .userId(memberInput.getUserId())
                 .userName(memberInput.getUserName())
-                .userNickname(memberInput.getUserNickname())
+                .userEmail(memberInput.getUserEmail())
                 .phone(memberInput.getPhone())
                 .password(encPassword)
                 .userRole(0)
@@ -57,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
         memberRepository.save(member);
 
-        String email = memberInput.getUserId();
+        String email = memberInput.getUserEmail();
         String subject = "[N-BUY] 사이트 가입을 축하드립니다. ";
         String text = "<p>N-BUY 사이트 가입을 축하드립니다.<p><p>아래 링크를 클릭하셔서 가입을 완료 하세요.</p>"
                 + "<div><a target='_blank' href='http://localhost:8080/member/email_auth?id=" + uuid + "'> 가입 완료 </a></div>";
@@ -133,15 +131,15 @@ public class MemberServiceImpl implements MemberService {
         Member member = optionalMember.get();
 
         if (Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())) {
-            throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해주세요.");
+            throw new NbuyException(ErrorCode.MEMBER_NOT_EMAIL_AUTH);
         }
 
         if (Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())) {
-            throw new MemberStopUserException("정지된 회원 입니다.");
+            throw new NbuyException(ErrorCode.MEMBER_STOP_USE);
         }
 
         if (Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())) {
-            throw new MemberStopUserException("탈퇴된 회원 입니다.");
+            throw new NbuyException(ErrorCode.MEMBER_WITHDRAW);
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
