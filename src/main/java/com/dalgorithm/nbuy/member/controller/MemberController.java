@@ -1,6 +1,5 @@
 package com.dalgorithm.nbuy.member.controller;
 
-import com.dalgorithm.nbuy.common.ServiceResult;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.model.MemberInput;
 import com.dalgorithm.nbuy.member.service.MemberService;
@@ -8,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -23,7 +24,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @RequestMapping("/member/login")
-    public String login(HttpServletRequest request) {
+    public String login() {
         return "member/login";
     }
 
@@ -33,22 +34,19 @@ public class MemberController {
     }
 
     @PostMapping("/member/register")
-    public String registerSubmit(Model model, HttpServletRequest request, MemberInput memberInput) {
-
-        boolean result = memberService.register(memberInput);
-        model.addAttribute("result", result);
+    public String registerSubmit(@Valid MemberInput memberInput) {
+        memberService.register(memberInput);
 
         return "member/register_complete";
     }
 
     @GetMapping("/member/email_auth")
-    public String emailAuth(Model model, HttpServletRequest request) {
+    public String emailAuth(HttpServletRequest request) {
 
         String uuid = request.getParameter("id");
         log.info(uuid);
 
-        boolean result = memberService.emailAuth(uuid);
-        model.addAttribute("result", result);
+        memberService.emailAuth(uuid);
 
         return "member/email_auth";
     }
@@ -57,6 +55,7 @@ public class MemberController {
     public String memberInfo(Model model, Principal principal) {
 
         String userId = principal.getName();
+
         MemberDto detail = memberService.detail(userId);
         model.addAttribute("detail", detail);
 
@@ -64,18 +63,13 @@ public class MemberController {
     }
 
     @PostMapping("/member/info")
-    public String memberInfoSubmit(Model model
-            , MemberInput memberInput
-            , Principal principal) {
+    public String memberInfoSubmit(MemberInput memberInput, Principal principal) {
 
         String userId = principal.getName();
         memberInput.setUserId(userId);
 
-        ServiceResult result = memberService.updateMember(memberInput);
-        if (!result.isResult()) {
-            model.addAttribute("message", result.getMessage());
-            return "common/error";
-        }
+        memberService.updateMember(memberInput);
+
         return "redirect:/member/info";
     }
 }
