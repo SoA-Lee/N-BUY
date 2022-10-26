@@ -1,10 +1,8 @@
 package com.dalgorithm.nbuy.member.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
@@ -12,14 +10,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
-@Entity
+@Getter
+@Setter
+@Entity(name = "member")
 public class Member implements MemberCode {
 
     @Id
     private String userId;
+
     private String userName;
-    private String userNickname;
+    private String userEmail;
     private String password;
     private String phone;
 

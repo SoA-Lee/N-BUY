@@ -1,6 +1,5 @@
 package com.dalgorithm.nbuy.member.service;
 
-import com.dalgorithm.nbuy.common.ServiceResult;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.model.MemberInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,13 +12,13 @@ public interface MemberService extends UserDetailsService {
      * 회원가입하기
      */
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    boolean register(MemberInput memberInput);
+    void register(MemberInput memberInput);
 
     /**
      * uuid에 해당하는 계정을 활성화 함.
      */
     @Transactional
-    boolean emailAuth(String uuid);
+    void emailAuth(String uuid);
 
     /**
      * 회원 상세 정보
@@ -30,5 +29,5 @@ public interface MemberService extends UserDetailsService {
      * 회원정보 수정
      */
     @Transactional
-    ServiceResult updateMember(MemberInput memberInput);
+    void updateMember(MemberInput memberInput);
 }

@@ -1,34 +1,34 @@
 package com.dalgorithm.nbuy.member.dto;
 
 import com.dalgorithm.nbuy.member.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Builder
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
 public class MemberDto {
 
-    String userId;
-    String userName;
-    String userNickname;
-    String phone;
-    String password;
-    LocalDateTime regDt;
-    LocalDateTime udtDt;
+    private String userId;
+    private String userName;
+    private String userEmail;
+    private String password;
 
-    String emailAuthKey;
-    boolean emailAuthYn;
-    LocalDateTime emailAuthDt;
+    private String phone;
+    private LocalDateTime regDt;
+    private LocalDateTime udtDt;
 
-    int userRole;
-    String userStatus;
+    private String emailAuthKey;
+    private boolean emailAuthYn;
+    private LocalDateTime emailAuthDt;
+
+    private int userRole;
+    private String userStatus;
 
     private String zipcode;
     private String addr;
@@ -39,11 +39,12 @@ public class MemberDto {
     // 시퀀스 처리
     long seq;
 
+
     public static MemberDto of(Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())
                 .userName(member.getUserName())
-                .userNickname(member.getUserNickname())
+                .userEmail(member.getUserEmail())
                 .phone(member.getPhone())
                 .password(member.getPassword())
                 .regDt(member.getRegDt())
