@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원 정보</title>
+    <title>N-BUY</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         $(function() {
@@ -20,19 +20,18 @@
 </head>
 <body>
 
-
 <h1>회원 정보</h1>
-<!--<div th:replace="/fragments/layout.html :: fragment-body-menu"></div>-->
+<!--<div th:replace="/fragments/header.html :: fragment-body-menu"></div>-->
 
 <div>
     <hr/>
-    <a href="/member/info">회원 정보 수정</a>
+    <a href="/members/info">회원 정보 수정</a>
     |
-    <a href="/member/password">비밀번호 변경</a>
+    <a href="/members/password">비밀번호 변경</a>
     |
-    <a href="/member/takecourse">My 구매 진행</a>
+    <a href="/members/leader">My 구매 진행</a>
     |
-    <a href="/member/takecourse">My 구매 신청</a>
+    <a href="/members/applicant">My 구매 신청</a>
     <hr/>
 </div>
 
@@ -84,13 +83,13 @@
             <tr>
                 <th>가입일</th>
                 <td>
-                    <p th:text="${detail.regDtText}">가입일자</p>
+                    <p th:text="${#temporals.format(detail.regDt, 'yyyy-MM-dd HH:mm:ss')}">가입일자</p>
                 </td>
             </tr>
             <tr>
                 <th>회원정보 수정일</th>
                 <td>
-                    <p th:text="${detail.udtDtText}">회원정보 수정일자</p>
+                    <p th:text="${#temporals.format(detail.udtDt, 'yyyy-MM-dd HH:mm:ss')}">회원정보 수정일자</p>
                 </td>
             </tr>
             </tbody>
@@ -99,7 +98,7 @@
 
         <div>
             <button type="submit">수정</button>
-            <a href="/member/withdraw"> 회원 탈퇴 </a>
+            <a href="/members/withdraw"> 회원 탈퇴 </a>
         </div>
     </form>
 </div>

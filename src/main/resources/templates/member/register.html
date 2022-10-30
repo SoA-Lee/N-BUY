@@ -1,12 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원 가입</title>
+    <title>N-BUY</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+
 <body>
 <h1>회원 가입</h1>
-<div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
+
+<script th:inline = "javascript">
+    $(document).ready(function (){
+        const alertMessage = [[${errorMessage}]];
+        if (alertMessage != null) {
+            alert(alertMessage);}
+    });
+</script>
+
 
 <form method="post">
     <div>
@@ -33,6 +44,8 @@
         <button>회원 가입 하기</button>
     </div>
 </form>
+
+
 
 </body>
 </html>

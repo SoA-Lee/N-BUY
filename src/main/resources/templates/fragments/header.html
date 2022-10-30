@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+</head>
+<body>
+<div class="header" th:fragment="fragment-body-menu">
+
+    <div style="float: left">
+        <a href="/products/list" sec:authorize="hasAnyAuthority('ROLE_USER')">| 같이 구매 상품 목록 |</a>
+        <a href="/products/new" sec:authorize="hasAnyAuthority('ROLE_USER')" >같이 구매 상품 등록 |</a>
+
+        <a href="/admin/members" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">| 회원 관리 |</a>
+        <a href="/admin/categories" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> 카테고리 관리 |</a>
+        <a href="/admin/products" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> 상품 관리 |</a>
+    </div>
+
+    <div style="float: right">
+        <a href="/members/register"  sec:authorize="isAnonymous()">| 회원 가입 |</a>
+        <a href="/members/info" sec:authorize="isAuthenticated()" > | 회원 정보 |</a>
+        <a href="/members/login" sec:authorize="isAnonymous()">로그인 |</a>
+        <a href="/members/logout" sec:authorize="isAuthenticated()">로그아웃 |</a>
+    </div>
+
+    <br/>
+    <hr/>
+</div>
+
+</body>
+</html>

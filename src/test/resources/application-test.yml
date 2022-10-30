@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:~/N-BUY
-    username: nbuy
+    url: jdbc:h2:~/NBUY
+    username: nbuy_user
     password: a1234
     driverClassName: org.h2.Driver
   h2:
@@ -12,7 +12,7 @@ spring:
     defer-datasource-initialization: true
     database-platform: H2
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
