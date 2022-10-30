@@ -23,13 +23,12 @@ public enum ErrorCode {
     MEMBER_WITHDRAW(NOT_FOUND,"탈퇴한 회원입니다."),
     MEMBER_NOT_FOUND(NOT_FOUND, "회원정보가 존재하지 않습니다."),
     MEMBER_USER_ID_ALREADY_EXIST(CONFLICT, "해당 아이디는 사용 중 입니다."),
+    MEMBER_ALREADY_REGISTER(CONFLICT,"이미 가입된 회원입니다."),
 
+    MEMBER_ID_PASSWORD_UNMATCH(NOT_FOUND, "비밀번호가 일치하지 않습니다."),
 
     EMAIL_AUTH_ALREADY_COMPLETE(CONFLICT, "이메일 인증이 이미 완료된 상태입니다."),
-    EMAIL_AUTH_KEY_NOT_FOUND(NOT_FOUND, "존재하지 않는 이메일 인증 키입니다."),
-
-
-    DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다");
+    EMAIL_AUTH_KEY_NOT_FOUND(NOT_FOUND, "존재하지 않는 이메일 인증 키입니다.");
 
     private final HttpStatus httpStatus;
     private final String description;

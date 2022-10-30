@@ -22,32 +22,43 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("Member 저장 테스트")
-
-    void saveTest() {
-        Member member = Member.builder()
-                .userId("nbuy@gmail.com")
-                .userName("pro")
-                .build();
+    void createMemberTest() {
+        Member member = new Member();
+        member.setUserEmail("nbuy@gmail.com");
+        member.setUserName("hello");
 
         Member savedMember = memberRepository.save(member);
 
         assertEquals("nbuy@gmail.com", savedMember.getUserId());
-        assertEquals("pro", savedMember.getUserName());
+        assertEquals("hello", savedMember.getUserName());
     }
 
     @Test
-    @DisplayName("findByEmailAuthKey 테스트")
+    @DisplayName("이메일 인증키 조회 테스트")
     void findByEmailAuthKeyTest() {
-        Member member = Member.builder()
-                .userId("nbuy@gmail.com")
-                .userName("pro")
-                .emailAuthKey("nbuynbuy")
-                .build();
+        Member member = new Member();
+        member.setUserEmail("nbuy@gmail.com");
+        member.setUserName("hello");
+        member.setEmailAuthKey("nbuynbuy");
 
         Member savedMember = memberRepository.save(member);
         Optional<Member> findMember = memberRepository.findByEmailAuthKey(member.getEmailAuthKey());
 
         assertEquals("nbuynbuy", savedMember.getEmailAuthKey());
         assertEquals("nbuynbuy", findMember.get().getEmailAuthKey());
+    }
+
+    @Test
+    @DisplayName("이메일 조회 테스트")
+    void findByEmailTest() {
+        Member member = new Member();
+        member.setUserEmail("nbuy@gmail.com");
+        member.setUserName("hello");
+        member.setEmailAuthKey("nbuynbuy");
+
+        Member savedMember = memberRepository.save(member);
+        Member findMember = memberRepository.findByUserEmail(member.getUserEmail());
+
+        assertEquals(findMember.getEmailAuthKey(), savedMember.getEmailAuthKey());
     }
 }

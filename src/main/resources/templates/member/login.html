@@ -2,12 +2,12 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원 로그인</title>
+    <title>N-BUY</title>
 </head>
 <body>
 <h1>회원 로그인</h1>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
 <div th:text="${errorMessage}"></div>
-<div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
 
 <form method="post">
 
