@@ -5,11 +5,21 @@
     <title>N-BUY</title>
 </head>
 
+<script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 <body>
-<h1>메인 페이지</h1>
-<div th:replace="/fragments/layout.html :: fragment-body-menu"></div>
+
+<script th:inline = "javascript">
+    $(document).ready(function (){
+        var message = [[${successMessage}]];
+        if (message != null) {
+            alert(message);}
+    });
+</script>
+
+<h1><a th:href="index"></a> N-BUY</h1>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
 <div style="padding: 15px"></div>
 <img src="/static/img/logo.jpg" alt="logo" width="100%" >
 
