@@ -49,17 +49,17 @@ public class Member implements MemberCode {
         String enPassword = BCrypt.hashpw(memberFormDto.getPassword(), BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
 
-        Member member = new Member();
-        member.setUserId(memberFormDto.getUserId());
-        member.setUserName(memberFormDto.getUserName());
-        member.setUserEmail(memberFormDto.getUserEmail());
-        member.setPhone(memberFormDto.getPhone());
-        member.setPassword(enPassword);
-        member.setRole(MemberRole.ROLE_USER);
-        member.setRegDt(LocalDateTime.now());
-        member.setEmailAuthYn(false);
-        member.setEmailAuthKey(uuid);
-
-        return member;
+        return Member.builder()
+                .userId(memberFormDto.getUserId())
+                .userName(memberFormDto.getUserName())
+                .userEmail(memberFormDto.getUserEmail())
+                .phone(memberFormDto.getPhone())
+                .password(enPassword)
+                .role(MemberRole.ROLE_USER)
+                .userStatus(MEMBER_STATUS_REQ)
+                .regDt(LocalDateTime.now())
+                .emailAuthYn(false)
+                .emailAuthKey(uuid)
+                .build();
     }
 }
