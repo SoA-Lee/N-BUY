@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,22 +20,23 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/members")
 @Slf4j
 public class MemberController {
 
     private final MemberService memberService;
 
-    @RequestMapping("/members/login")
+    @RequestMapping("/login")
     public String login() {
         return "member/login";
     }
 
-    @GetMapping("/members/register")
+    @GetMapping("/register")
     public String register() {
         return "member/register";
     }
 
-    @PostMapping("/members/register")
+    @PostMapping("/register")
     public String registerSubmit(@Valid MemberFormDto memberFormDto,
                                  BindingResult bindingResult, Model model) {
 
@@ -56,7 +56,7 @@ public class MemberController {
         return "index";
     }
 
-    @GetMapping("/members/email_auth")
+    @GetMapping("/email_auth")
     public String emailAuth(HttpServletRequest request) {
 
         String uuid = request.getParameter("id");
@@ -67,7 +67,7 @@ public class MemberController {
         return "member/email_auth";
     }
 
-    @GetMapping("/members/info")
+    @GetMapping("/info")
     public String memberInfo(Model model, Principal principal) {
 
         String userId = principal.getName();
@@ -78,7 +78,7 @@ public class MemberController {
         return "member/info";
     }
 
-    @PostMapping("/members/info")
+    @PostMapping("/info")
     public String memberInfoSubmit(MemberDto memberDto, Principal principal) {
 
         String userId = principal.getName();
@@ -89,12 +89,12 @@ public class MemberController {
         return "redirect:/members/info";
     }
 
-    @GetMapping("/members/withdraw")
+    @GetMapping("/withdraw")
     public String memberWithdraw() {
         return "member/withdraw";
     }
 
-    @PostMapping("/members/withdraw")
+    @PostMapping("/withdraw")
     public String memberWithdrawSubmit(Model model
             , MemberDto memberDto, Principal principal) {
 
@@ -110,8 +110,4 @@ public class MemberController {
 
         return "redirect:/members/logout";
     }
-
-    // 코드 전체적인 정리
-    // 탈퇴 기능하기
-    // 관리자 로그인 시 메인화면 다르게 보이기 springSecurity 설정
 }

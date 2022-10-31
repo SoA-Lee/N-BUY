@@ -7,7 +7,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class MemberException extends RuntimeException {
     private ErrorCode errorCode;
     private String errorMessage;
