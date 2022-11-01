@@ -1,6 +1,6 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.exception.ErrorCode;
+import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
 import com.dalgorithm.nbuy.member.components.MailComponents;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static com.dalgorithm.nbuy.exception.ErrorCode.EMAIL_AUTH_ALREADY_COMPLETE;
-import static com.dalgorithm.nbuy.exception.ErrorCode.EMAIL_AUTH_KEY_NOT_FOUND;
+import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_ALREADY_COMPLETE;
+import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_KEY_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = memberRepository.findByUserEmail(member.getUserEmail());
 
         if (findMember != null) {
-            throw new MemberException(ErrorCode.MEMBER_ALREADY_REGISTER);
+            throw new MemberException(MemberErrorCode.MEMBER_ALREADY_REGISTER);
         }
 
         sendRegisterAuthEmail(member);
@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto detail(String userId) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         return MemberDto.of(findMember);
     }
@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(MemberDto memberDto) {
 
         Member findMember = memberRepository.findById(memberDto.getUserId())
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         findMember.setPhone(memberDto.getPhone());
         findMember.setZipcode(memberDto.getZipcode());
@@ -81,10 +81,10 @@ public class MemberServiceImpl implements MemberService {
     public void  withdraw(String userId, String password) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         if (!PasswordUtils.equals(password, findMember.getPassword())) {
-            throw  new MemberException(ErrorCode.MEMBER_ID_PASSWORD_UNMATCH);
+            throw  new MemberException(MemberErrorCode.MEMBER_ID_PASSWORD_UNMATCH);
         }
 
         findMember.setUserName("삭제회원");

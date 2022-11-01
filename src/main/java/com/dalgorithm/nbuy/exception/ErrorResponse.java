@@ -1,5 +1,6 @@
 package com.dalgorithm.nbuy.exception;
 
+import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,14 @@ public class ErrorResponse {
     private final String code;
     private final String message;
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponse> toResponseEntity(MemberErrorCode memberErrorCode) {
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(memberErrorCode.getHttpStatus())
                 .body(ErrorResponse.builder()
-                        .status(errorCode.getHttpStatus().value())
-                        .error(errorCode.getHttpStatus().name())
-                        .code(errorCode.name())
-                        .message(errorCode.getDescription())
+                        .status(memberErrorCode.getHttpStatus().value())
+                        .error(memberErrorCode.getHttpStatus().name())
+                        .code(memberErrorCode.name())
+                        .message(memberErrorCode.getDescription())
                         .build()
                 );
     }

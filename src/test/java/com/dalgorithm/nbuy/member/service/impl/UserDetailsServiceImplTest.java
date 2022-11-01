@@ -1,6 +1,6 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.exception.ErrorCode;
+import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
@@ -64,7 +64,7 @@ class UserDetailsServiceImplTest {
                 () -> userDetailsService.loadUserByUsername(member.getUserId()));
 
         // then
-        assertEquals(exception.getErrorCode(), ErrorCode.MEMBER_NOT_EMAIL_AUTH);
+        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_NOT_EMAIL_AUTH);
     }
 
     @Test
@@ -84,7 +84,7 @@ class UserDetailsServiceImplTest {
                 () -> userDetailsService.loadUserByUsername(anyString()));
 
         // then
-        assertEquals(exception.getErrorCode(), ErrorCode.MEMBER_STOP_USE);
+        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_STOP_USE);
     }
 
     @Test
@@ -104,6 +104,6 @@ class UserDetailsServiceImplTest {
                 () -> userDetailsService.loadUserByUsername(anyString()));
 
         // then
-        assertEquals(exception.getErrorCode(), ErrorCode.MEMBER_WITHDRAW);
+        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_WITHDRAW);
     }
 }

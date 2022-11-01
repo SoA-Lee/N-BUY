@@ -1,6 +1,5 @@
 package com.dalgorithm.nbuy.member.exception;
 
-import com.dalgorithm.nbuy.exception.ErrorCode;
 import lombok.*;
 
 @Getter
@@ -8,11 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberException extends RuntimeException {
-    private ErrorCode errorCode;
+    private MemberErrorCode memberErrorCode;
     private String errorMessage;
 
-    public MemberException(ErrorCode errorCode){
-        this.errorCode = errorCode;
-        this.errorMessage = errorCode.getDescription();
+    public MemberException(MemberErrorCode memberErrorCode){
+        this.memberErrorCode = memberErrorCode;
+        this.errorMessage = memberErrorCode.getDescription();
     }
 }

@@ -1,6 +1,6 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.exception.ErrorCode;
+import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.exception.MemberException;
@@ -73,7 +73,7 @@ class MemberServiceImplTest {
                 () -> memberService.emailAuth(findMember.getEmailAuthKey()));
 
         // then
-        assertEquals(ErrorCode.EMAIL_AUTH_KEY_NOT_FOUND, exception.getErrorCode());
+        assertEquals(MemberErrorCode.EMAIL_AUTH_KEY_NOT_FOUND, exception.getMemberErrorCode());
     }
 
     @Test
@@ -95,7 +95,7 @@ class MemberServiceImplTest {
                 () -> memberService.emailAuth(findMember.getEmailAuthKey()));
 
         // then
-        assertEquals(ErrorCode.EMAIL_AUTH_ALREADY_COMPLETE, exception.getErrorCode());
+        assertEquals(MemberErrorCode.EMAIL_AUTH_ALREADY_COMPLETE, exception.getMemberErrorCode());
     }
 
     @Test
@@ -135,7 +135,7 @@ class MemberServiceImplTest {
                 () -> memberService.detail(findMember.getUserId()));
 
         // then
-        assertEquals(ErrorCode.MEMBER_NOT_FOUND, exception.getErrorCode());
+        assertEquals(MemberErrorCode.MEMBER_NOT_FOUND, exception.getMemberErrorCode());
     }
 
 }
