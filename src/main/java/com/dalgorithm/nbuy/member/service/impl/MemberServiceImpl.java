@@ -1,21 +1,26 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.exception.ErrorCode;
 import com.dalgorithm.nbuy.member.components.MailComponents;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.entity.MemberCode;
+import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
 import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import com.dalgorithm.nbuy.member.service.MemberService;
 import com.dalgorithm.nbuy.member.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
-import static com.dalgorithm.nbuy.exception.ErrorCode.EMAIL_AUTH_ALREADY_COMPLETE;
-import static com.dalgorithm.nbuy.exception.ErrorCode.EMAIL_AUTH_KEY_NOT_FOUND;
+import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_ALREADY_COMPLETE;
+import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_KEY_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = memberRepository.findByUserEmail(member.getUserEmail());
 
         if (findMember != null) {
-            throw new MemberException(ErrorCode.MEMBER_ALREADY_REGISTER);
+            throw new MemberException(MemberErrorCode.MEMBER_ALREADY_REGISTER);
         }
 
         sendRegisterAuthEmail(member);
@@ -57,16 +62,16 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto detail(String userId) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        return MemberDto.of(findMember);
+        return MemberDto.fromEntity(findMember);
     }
 
     @Override
     public void updateMember(MemberDto memberDto) {
 
         Member findMember = memberRepository.findById(memberDto.getUserId())
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         findMember.setPhone(memberDto.getPhone());
         findMember.setZipcode(memberDto.getZipcode());
@@ -78,27 +83,41 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void  withdraw(String userId, String password) {
+    public void withdraw(String userId, String password) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         if (!PasswordUtils.equals(password, findMember.getPassword())) {
-            throw  new MemberException(ErrorCode.MEMBER_ID_PASSWORD_UNMATCH);
+            throw  new MemberException(MemberErrorCode.MEMBER_ID_PASSWORD_UNMATCH);
         }
 
-        findMember.setUserName("삭제회원");
-        findMember.setPhone("");
-        findMember.setPassword("");
-        findMember.setRegDt(null);
-        findMember.setUdtDt(null);
-        findMember.setEmailAuthYn(false);
-        findMember.setEmailAuthDt(null);
-        findMember.setEmailAuthKey("");
         findMember.setUserStatus(MemberCode.MEMBER_STATUS_WITHDRAW);
-        findMember.setZipcode("");
-        findMember.setAddr("");
-        findMember.setAddrDetail("");
+        memberRepository.save(findMember);
+    }
+
+    @Override
+    public Page<MemberDto> searchMember(String keyword, Pageable pageable) {
+
+        pageable = PageRequest.of(
+                pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
+                pageable.getPageSize());
+
+        if(StringUtils.hasText(keyword)) {
+            return memberRepository.findByUserEmailContaining(keyword, pageable).map(MemberDto::fromEntity);
+        }else{
+            return memberRepository.findAll(pageable).map(MemberDto::fromEntity);
+        }
+    }
+
+    @Override
+    public void updateStatus(String userId, String userStatus) {
+
+        Member findMember = memberRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
+
+        findMember.setUserStatus(userStatus);
+
         memberRepository.save(findMember);
     }
 
@@ -110,5 +129,4 @@ public class MemberServiceImpl implements MemberService {
 
         mailComponents.sendMail(email, subject, text);
     }
-
 }

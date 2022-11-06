@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <link rel="stylesheet" href="/static/css/list.css">
+</head>
+<body>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
+<h1>관리자 회원 관리</h1>
+
+<div class="list">
+
+    <div class="search-form">
+        <p class="total-count">전체 <span th:text="${memberList.getTotalElements()}"></span>개</p>
+        <form method="get" action="/admin/members">
+            <input th:value="${keyword}" type="search"
+                   name="keyword" placeholder="검색어 입력"/>
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>
+                아이디(이메일)
+            </th>
+            <th>
+                이름
+            </th>
+            <th>
+                연락처
+            </th>
+            <th>
+                이메일
+            </th>
+            <th>
+                이메일 인증 여부
+            </th>
+            <th>
+                가입일
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${memberList}">
+            <td>
+                <a th:text="${member.userId}"
+                   th:href="${'/admin/members/detail?userId=' + member.userId}">nbuy</a>
+            </td>
+            <td th:text="${member.userName}">홍길동</td>
+            <td th:text="${member.phone}">010-1111-2222</td>
+            <td th:text="${member.userEmail}">nbuy@gmail.com</td>
+            <td>
+                <p th:if="${member.emailAuthYn}">Y</p>
+                <p th:if="${member.emailAuthYn eq false}">N</p>
+            </td>
+            <td>
+                <p th:text="${#temporals.format(member.regDt, 'yyyy.MM.dd HH:mm')}">2021.01.01</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav style="text-align: center;">
+        <div class="pager" style="text-align: center">
+            <th:block th:each="page:${#numbers.sequence(startPage,endPage)}">
+                <a th:if="${page != nowPage}"
+                   th:href="@{/admin/members(keyword=${keyword}, page=${page})}"
+                   th:text="${page}"></a>
+                <strong th:if="${page==nowPage}" th:text="${page}"
+                        style="color:red"></strong>
+            </th:block>
+        </div>
+    </nav>
+
+</div>
+</body>
+</html>

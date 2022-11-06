@@ -1,0 +1,7 @@
+.detail table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.detail table th, .detail table td {
+    border:solid 1px #000;
+}

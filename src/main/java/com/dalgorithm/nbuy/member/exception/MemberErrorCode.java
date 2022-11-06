@@ -1,4 +1,4 @@
-package com.dalgorithm.nbuy.exception;
+package com.dalgorithm.nbuy.member.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum MemberErrorCode {
 
     /*
         400 BAD_REQUEST : 잘못된 요청
