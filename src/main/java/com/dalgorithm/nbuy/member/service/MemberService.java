@@ -2,8 +2,12 @@ package com.dalgorithm.nbuy.member.service;
 
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface MemberService {
 
@@ -35,4 +39,16 @@ public interface MemberService {
      */
     @Transactional
     void withdraw(String userId, String password);
+
+    /**
+     * 회원 검색
+     */
+    @Transactional(readOnly = true)
+    Page<MemberDto> searchMember(String keyword, Pageable pageable);
+
+    /**
+     * 회원 상태 변경
+     */
+    @Transactional
+    void updateStatus(String userId, String userStatus);
 }

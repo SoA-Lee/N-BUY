@@ -1,4 +1,4 @@
-package com.dalgorithm.nbuy.admin;
+package com.dalgorithm.nbuy.admin.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +9,7 @@ public class AdminMainController {
     @GetMapping("/admin/main")
     public String main() {
 
-        return "/admin/main";
+        return "/index";
 
     }
 }

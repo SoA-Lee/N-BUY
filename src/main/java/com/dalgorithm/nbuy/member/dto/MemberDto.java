@@ -42,7 +42,7 @@ public class MemberDto {
     private String addr;
     private String addrDetail;
 
-    public static MemberDto of(Member member) {
+    public static MemberDto fromEntity(Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())
                 .userName(member.getUserName())
