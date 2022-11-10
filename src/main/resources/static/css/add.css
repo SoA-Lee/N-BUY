@@ -1,0 +1,22 @@
+.detail table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.detail table th, .detail table td {
+    border:solid 1px #000;
+}
+
+.buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+.buttons a, .buttons button {
+    border-width: 0;
+    background-color: transparent;
+    text-decoration: underline;
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+    color: #000;
+    cursor: pointer;
+}
