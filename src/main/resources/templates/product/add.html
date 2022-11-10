@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script th:inline = "javascript">
+        $(document).ready(function (){
+            const alertMessage = [[${errorMessage}]];
+            if (alertMessage != null) {
+                alert(alertMessage);}
+        });
+    </script>
+</head>
+<body>
+<h1>같이구매 상품 등록</h1>
+
+<div class="detail">
+    <!--    파일을 서버로 보내기 위해선 enctype 설정해야함-->
+    <form id="submitForm" method="post" enctype="multipart/form-data">
+        <table>
+            <tbody>
+            <tr>
+                <th>상품 카테고리</th>
+                <td>
+                    <select name="categoryId" required>
+                        <option value=""> 카테고리 선택 </option>
+                        <option
+                                th:selected="${detail.categoryId == x.id}"
+                                th:each="x : ${category}" th:value="${x.id}" th:text="${x.categoryName}"> 기획 </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>상품명</th>
+                <td><input th:value="${detail.productTitle}" type="text" name="productTitle" required placeholder="상품명 입력" /></td>
+            </tr>
+
+            <tr>
+                <th>상품 구매 주소</th>
+                <td><input th:value="${detail.productUrl}" type="url" name="productUrl" required placeholder="상품 URL 입력" /></td>
+            </tr>
+
+            <tr>
+                <th>상품 가격</th>
+                <td><input th:value="${detail.price}" type="text" name="price" required placeholder="상품 총 금액 입력" /></td>
+            </tr>
+
+            <tr>
+                <th>총 인원 수</th>
+                <td><input th:value="${detail.totalPeople}" type="text" name="totalPeople" placeholder="총 인원수 입력"></td>
+            </tr>
+
+            <tr>
+                <th>나눔 장소</th>
+                <td><input th:value="${detail.sharingPlace}" type="text" name="sharingPlace" required placeholder="나눔 장소 입력" /></td>
+            </tr>
+            <tr>
+                <th>나눔 날짜</th>
+                <td><input th:value="${detail.sharingDay}" type="datetime-local" name="sharingDay" required placeholder="나눔 날짜 입력"/></td>
+            </tr>
+
+            <tr>
+                <th>첨부 파일</th>
+                <td>
+                    <input type="file" name="file"/>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <div class="buttons">
+            <button th:if="${editMode}" type="submit"> 상품 수정 하기 </button>
+            <button th:if="${!editMode}" type="submit"> 상품 등록 하기 </button>
+            <a href="/products/list"> 목록 이동 </a>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>
