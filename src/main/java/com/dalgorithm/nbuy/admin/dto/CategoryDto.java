@@ -15,6 +15,8 @@ public class CategoryDto {
     private Long id;
     private String categoryName;
 
+    int productCount;
+
     public static List<CategoryDto> fromEntity(List<Category> categories) {
         if (categories != null) {
             List<CategoryDto> categoryList = new ArrayList<>();

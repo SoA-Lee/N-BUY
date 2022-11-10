@@ -4,19 +4,20 @@ import com.dalgorithm.nbuy.admin.dto.CategoryDto;
 import com.dalgorithm.nbuy.admin.entity.Category;
 import com.dalgorithm.nbuy.admin.exception.CategoryErrorCode;
 import com.dalgorithm.nbuy.admin.exception.CategoryException;
+import com.dalgorithm.nbuy.admin.mapper.CategoryMapper;
 import com.dalgorithm.nbuy.admin.repository.CategoryRepository;
 import com.dalgorithm.nbuy.admin.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<CategoryDto> getCategoryList() {
@@ -51,5 +52,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(long id) {
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CategoryDto> frontList(CategoryDto categoryDto) {
+        return categoryMapper.select(categoryDto);
     }
 }
