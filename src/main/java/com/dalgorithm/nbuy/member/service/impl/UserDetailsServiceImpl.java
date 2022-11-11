@@ -1,9 +1,9 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
+import com.dalgorithm.nbuy.exception.impl.user.EmailAuthNotYetException;
+import com.dalgorithm.nbuy.exception.impl.user.UserWithdrawException;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.entity.MemberRole;
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,15 +30,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 존재하지 않습니다."));
 
         if (Member.MEMBER_STATUS_REQ.equals(findMember.getUserStatus())) {
-            throw new MemberException(MemberErrorCode.MEMBER_NOT_EMAIL_AUTH);
-        }
-
-        if (Member.MEMBER_STATUS_STOP.equals(findMember.getUserStatus())) {
-            throw new MemberException(MemberErrorCode.MEMBER_STOP_USE);
+            throw new EmailAuthNotYetException();
         }
 
         if (Member.MEMBER_STATUS_WITHDRAW.equals(findMember.getUserStatus())) {
-            throw new MemberException(MemberErrorCode.MEMBER_WITHDRAW);
+            throw new UserWithdrawException();
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

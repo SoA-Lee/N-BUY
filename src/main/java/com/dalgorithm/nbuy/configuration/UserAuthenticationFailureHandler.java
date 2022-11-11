@@ -1,6 +1,5 @@
 package com.dalgorithm.nbuy.configuration;
 
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;

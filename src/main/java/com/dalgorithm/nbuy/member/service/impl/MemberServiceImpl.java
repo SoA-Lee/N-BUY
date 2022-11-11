@@ -1,11 +1,13 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
+import com.dalgorithm.nbuy.exception.impl.user.AlreadyExistUserException;
+import com.dalgorithm.nbuy.exception.impl.user.EmailAuthAlreadyCompleteException;
+import com.dalgorithm.nbuy.exception.impl.user.EmailAuthKeyNotFoundException;
+import com.dalgorithm.nbuy.exception.impl.user.NotMatchPasswordException;
 import com.dalgorithm.nbuy.member.components.MailComponents;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.entity.MemberCode;
-import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import com.dalgorithm.nbuy.member.service.MemberService;
 import com.dalgorithm.nbuy.member.util.PasswordUtils;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-
-import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_ALREADY_COMPLETE;
-import static com.dalgorithm.nbuy.member.exception.MemberErrorCode.EMAIL_AUTH_KEY_NOT_FOUND;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,10 +32,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void register(Member member) {
 
-        Member findMember = memberRepository.findByUserEmail(member.getUserEmail());
+        Optional<Member> findMember = memberRepository.findById(member.getUserId());
 
-        if (findMember != null) {
-            throw new MemberException(MemberErrorCode.MEMBER_ALREADY_REGISTER);
+        if (findMember.isPresent()) {
+            throw new AlreadyExistUserException();
         }
 
         sendRegisterAuthEmail(member);
@@ -46,10 +46,10 @@ public class MemberServiceImpl implements MemberService {
     public void emailAuth(String uuid) {
 
         Member findMember = memberRepository.findByEmailAuthKey(uuid)
-                .orElseThrow(() -> new MemberException(EMAIL_AUTH_KEY_NOT_FOUND));
+                .orElseThrow(EmailAuthKeyNotFoundException::new);
 
         if (findMember.isEmailAuthYn()) {
-            throw new MemberException(EMAIL_AUTH_ALREADY_COMPLETE);
+            throw new EmailAuthAlreadyCompleteException();
         }
 
         findMember.setUserStatus(Member.MEMBER_STATUS_USE);
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto detail(String userId) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("회원정보가 존재하지 않습니다."));
 
         return MemberDto.fromEntity(findMember);
     }
@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(MemberDto memberDto) {
 
         Member findMember = memberRepository.findById(memberDto.getUserId())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("회원정보가 존재하지 않습니다."));
 
         findMember.setPhone(memberDto.getPhone());
         findMember.setZipcode(memberDto.getZipcode());
@@ -86,10 +86,10 @@ public class MemberServiceImpl implements MemberService {
     public void withdraw(String userId, String password) {
 
         Member findMember = memberRepository.findById(userId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("회원정보가 존재하지 않습니다."));
 
         if (!PasswordUtils.equals(password, findMember.getPassword())) {
-            throw  new MemberException(MemberErrorCode.MEMBER_ID_PASSWORD_UNMATCH);
+            throw  new NotMatchPasswordException();
         }
 
         findMember.setUserStatus(MemberCode.MEMBER_STATUS_WITHDRAW);
