@@ -25,37 +25,30 @@
                     return false;
                 }
 
-                var $thisForm = $(this); // 현재 폼 잡기
+                var $thisForm = $(this);
 
-                var url = '/api/course/req.api';
+                var url = '/orders/request';
                 var parameter = {
-                    courseId: $thisForm.find('input[name=id]').val()
+                    productId: $thisForm.find('input[name=id]').val()
                 };
                 axios.post(url, parameter).then(function (response) {
                     console.log(response);
                     console.log(response.data);
 
-                    response.data = response.data || {}; // 객체 없을 경우, 초기화
+                    response.data = response.data || {};
                     response.data.header = response.data.header || {};
 
-                    if (!response.data.header.result) {
-                        alert(response.data.header.message);
-                        return false;
-                    }
-
-                    //정상적일때
-                    alert('상품 참여가 정상적으로 신청되었습니다. ');
-                    location.href = '/';
-
+                    alert('상품 주문이 정상적으로 신청되었습니다.');
+                    location.href = '/products/list';
 
                 }).catch(function (err) {
-                    console.log(err);
+                    alert('상품 주문이 처리되지 않았습니다.');
+                    location.href = '/products/list';
                 });
-
                 return false;
-            });
-
+            })
         });
+    });
     </script>
 </head>
 <body>
@@ -89,7 +82,7 @@
     <div>
         <form id="submitForm" method="post" th:if="${detail.productStatus.toString().equals('PROGRESS')}">
             <input type="hidden" name="id" th:value="${detail.id}"/>
-            <button type="submit" value="COMPLETE">같이구매 신청</button>
+            <button type="submit">같이구매 신청</button>
         </form>
     </div>
 
