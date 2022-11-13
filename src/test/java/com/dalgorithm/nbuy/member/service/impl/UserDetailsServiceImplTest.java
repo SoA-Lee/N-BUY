@@ -1,8 +1,8 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
-import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
+import com.dalgorithm.nbuy.exception.impl.user.EmailAuthNotYetException;
+import com.dalgorithm.nbuy.exception.impl.user.UserWithdrawException;
 import com.dalgorithm.nbuy.member.entity.Member;
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,31 +60,11 @@ class UserDetailsServiceImplTest {
                 .willReturn(Optional.of(member));
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        EmailAuthNotYetException exception = assertThrows(EmailAuthNotYetException.class,
                 () -> userDetailsService.loadUserByUsername(member.getUserId()));
 
         // then
-        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_NOT_EMAIL_AUTH);
-    }
-
-    @Test
-    @DisplayName("로그인 실패 - 정지된 계정")
-    void loginFailedByStopIdTest() {
-        // given
-        Member member = Member.builder()
-                .userId("mem")
-                .userStatus(MEMBER_STATUS_STOP)
-                .build();
-
-        given(memberRepository.findById(anyString()))
-                .willReturn(Optional.of(member));
-
-        // when
-        MemberException exception = assertThrows(MemberException.class,
-                () -> userDetailsService.loadUserByUsername(anyString()));
-
-        // then
-        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_STOP_USE);
+        assertEquals(exception.getMessage(), "이메일 활성화가 되지 않은 계정입니다.");
     }
 
     @Test
@@ -100,10 +80,10 @@ class UserDetailsServiceImplTest {
                 .willReturn(Optional.of(member));
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        UserWithdrawException exception = assertThrows(UserWithdrawException.class,
                 () -> userDetailsService.loadUserByUsername(anyString()));
 
         // then
-        assertEquals(exception.getMemberErrorCode(), MemberErrorCode.MEMBER_WITHDRAW);
+        assertEquals(exception.getMessage(), "탈퇴한 회원입니다.");
     }
 }

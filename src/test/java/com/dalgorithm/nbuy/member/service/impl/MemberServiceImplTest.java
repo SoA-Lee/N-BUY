@@ -1,9 +1,8 @@
 package com.dalgorithm.nbuy.member.service.impl;
 
+import com.dalgorithm.nbuy.exception.AbstractException;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
-import com.dalgorithm.nbuy.member.exception.MemberErrorCode;
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Optional;
@@ -71,11 +71,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.empty());
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        AbstractException exception = assertThrows(AbstractException.class,
                 () -> memberService.emailAuth(findMember.getEmailAuthKey()));
 
         // then
-        assertEquals(MemberErrorCode.EMAIL_AUTH_KEY_NOT_FOUND, exception.getMemberErrorCode());
+        assertEquals("존재하지 않는 이메일 인증 키입니다.", exception.getMessage());
     }
 
     @Test
@@ -93,11 +93,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.of(findMember));
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        AbstractException exception = assertThrows(AbstractException.class,
                 () -> memberService.emailAuth(findMember.getEmailAuthKey()));
 
         // then
-        assertEquals(MemberErrorCode.EMAIL_AUTH_ALREADY_COMPLETE, exception.getMemberErrorCode());
+        assertEquals("이메일 인증이 이미 완료된 상태입니다.", exception.getMessage());
     }
 
     @Test
@@ -133,11 +133,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.empty());
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
                 () -> memberService.detail(findMember.getUserId()));
 
         // then
-        assertEquals(MemberErrorCode.MEMBER_NOT_FOUND, exception.getMemberErrorCode());
+        assertEquals("회원정보가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -181,11 +181,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.empty());
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
                 () -> memberService.updateMember(findMember));
 
         // then
-        assertEquals(MemberErrorCode.MEMBER_NOT_FOUND, exception.getMemberErrorCode());
+        assertEquals("회원정보가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -221,11 +221,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.empty());
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class,
                 () -> memberService.withdraw("mem", "1234"));
 
         // then
-        assertEquals(MemberErrorCode.MEMBER_NOT_FOUND, exception.getMemberErrorCode());
+        assertEquals("회원정보가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -241,11 +241,11 @@ class MemberServiceImplTest {
                 .willReturn(Optional.of(findMember));
 
         // when
-        MemberException exception = assertThrows(MemberException.class,
+        AbstractException exception = assertThrows(AbstractException.class,
                 () -> memberService.withdraw("mem", "4321"));
 
         // then
-        assertEquals(MemberErrorCode.MEMBER_ID_PASSWORD_UNMATCH, exception.getMemberErrorCode());
+        assertEquals("비밀번호가 일치하지 않습니다.", exception.getMessage());
     }
 
 }

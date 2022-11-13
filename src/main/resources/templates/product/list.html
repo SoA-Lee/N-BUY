@@ -13,24 +13,6 @@
                 var id = $(this).val();
                 location.href = '?searchProductId=' + id;
             });
-
-
-            $('.row-buttons button').on('click', function() {
-
-                var status = $(this).val();
-                var id = $(this).closest('div').find('input[name=id]').val();
-
-                var msg = status == 'COMPLETE' ? '같이구매 신청 처리 하시겠습니까?' : '같이구매 취소 처리 하시겠습니까?';
-                if (!confirm(msg)) {
-                    return false;
-                }
-
-                var $procForm = $('#procForm');
-                $procForm.find('input[name=id]').val(id);
-                $procForm.find('input[name=status]').val(status);
-                $procForm.submit();
-
-            });
         });
     </script>
 </head>
@@ -64,17 +46,15 @@
             <th>나눔 장소</th>
             <th>인원 현황</th>
             <th>진행 상태</th>
-            <th>신청하기</th>
         </tr>
         </thead>
 
         <tbody>
         <tr style="text-align: center" th:each="product : ${list}">
+            <td th:text="${product.id}">1</td>
             <td>
-                <a th:text="${product.id}"
-                   th:href="${'/products/detail?productId=' + product.id}">1</a>
-            </td>
-            <td th:text="${product.productTitle}">휴지</td>
+                <a th:text="${product.productTitle}"
+                   th:href="${'/products/detail/' + product.id}">휴지</a>
             <td th:text="${product.recruiterId}">홍길동</td>
             <td th:text="${product.price} + 원">50000원</td>
             <td th:text="${product.price / product.totalPeople} + 원">10000원</td>
@@ -89,13 +69,6 @@
             <td>
                 <p th:if="${product.productStatus.toString().equals('PROGRESS')}" style="background-color: greenyellow">PROGRESS</p>
                 <p th:if="${product.productStatus.toString().equals('FINISH')}" style="background-color: red">COMPLETE</p>
-            </td>
-            <td>
-                <div class="row-buttons" th:if="${product.productStatus.toString().equals('PROGRESS')}">
-                    <input type="hidden" name="id" th:value="${product.id}"/>
-                    <button value="COMPLETE" type="button">신청</button>
-                    <button value="CANCEL" type="button">취소</button>
-                </div>
             </td>
         </tr>
 

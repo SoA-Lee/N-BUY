@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,10 +99,25 @@ public class ProductController {
         return "index";
     }
 
-    @GetMapping("/detail")
-    ResponseEntity<?> productDetail() {
-        // TODO
-        return null;
+    @GetMapping("/detail/{id}")
+    public String productDetail(Model model, ProductParam productParam, Principal principal) {
+
+        String curUser = principal.getName();
+        ProductDto productDto = productService.detailProduct(productParam.getId());
+
+        model.addAttribute("detail", productDto);
+        model.addAttribute("curUser", curUser);
+
+        return "product/detail";
+    }
+
+    @PostMapping("/delete")
+    public String productDelete(Model model, ProductParam productParam, Principal principal) {
+
+        productService.deleteProduct(productParam.getId(), principal);
+        model.addAttribute("successMessage", "상품 삭제가 완료되었습니다. 마이 페이지를 확인해주세요.");
+
+        return "index";
     }
 
 }

@@ -1,9 +1,9 @@
 package com.dalgorithm.nbuy.member.controller;
 
+import com.dalgorithm.nbuy.exception.AbstractException;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.dto.MemberFormDto;
 import com.dalgorithm.nbuy.member.entity.Member;
-import com.dalgorithm.nbuy.member.exception.MemberException;
 import com.dalgorithm.nbuy.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +48,8 @@ public class MemberController {
             Member member = Member.createMember(memberFormDto);
             memberService.register(member);
             model.addAttribute("successMessage", "회원가입이 완료되었습니다. 이메일 인증을 해주시기 바랍니다.");
-        } catch (MemberException e) {
-            model.addAttribute("errorMessage", e.getErrorMessage());
+        } catch (AbstractException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "member/register";
         }
 
@@ -103,8 +103,8 @@ public class MemberController {
         try{
             memberService.withdraw(userId, memberDto.getPassword());
             model.addAttribute("successMessage", "탈퇴가 완료되었습니다.");
-        } catch (MemberException e) {
-            model.addAttribute("errorMessage", e.getErrorMessage());
+        } catch (AbstractException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "common/error";
         }
 

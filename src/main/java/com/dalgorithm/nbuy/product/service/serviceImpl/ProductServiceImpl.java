@@ -1,5 +1,9 @@
 package com.dalgorithm.nbuy.product.service.serviceImpl;
 
+import com.dalgorithm.nbuy.exception.impl.product.ProductNotFoundException;
+import com.dalgorithm.nbuy.order.entity.Order;
+import com.dalgorithm.nbuy.order.entity.OrderStatus;
+import com.dalgorithm.nbuy.order.repository.OrderRepository;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
 import com.dalgorithm.nbuy.product.dto.ProductParam;
 import com.dalgorithm.nbuy.product.entity.Product;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +27,8 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+
 
     @Override
     public Page<ProductDto> list(ProductParam param, Pageable pageable) {
@@ -44,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
             return new PageImpl<>(productList.subList(start, end), pageable, productList.size());
         }
 
-        throw new RuntimeException("상품이 존재하지 않습니다."); // 예외처리 수정 예정
+        throw new ProductNotFoundException();
     }
 
     @Override
@@ -54,7 +61,36 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void addProduct(Product product) {
-        log.info("[상품]" + product.getProductTitle() + "을 등록합니다.");
+        log.info("[상품] " + product.getProductTitle() + "을 등록합니다.");
         productRepository.save(product);
+    }
+
+    @Override
+    public ProductDto detailProduct(long id) {
+        log.info("[상품 번호] " + id + " 상품을 조회합니다.");
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        return ProductDto.fromEntity(product);
+    }
+
+    @Override
+    public void deleteProduct(long id, Principal principal) {
+        ProductDto productDto = ProductDto.fromEntity(productRepository.findById(id)
+                        .orElseThrow(ProductNotFoundException::new));
+
+        if (productDto.getRecruiterId().equals(principal.getName())){
+            productRepository.deleteById(id);
+            setOrderStatusWithdraw(id);
+            log.info("[상품 번호] " + id + " 상품을 삭제합니다.");
+        } else throw new RuntimeException("해당 상품에 접근 권한이 존재하지 않습니다.");
+    }
+
+    private void setOrderStatusWithdraw(long id) {
+        List<Order> orderList = orderRepository.findAllByProductId(id);
+        for ( Order order : orderList) {
+            order.setOrderStatus(OrderStatus.FORCE_DELETE);
+        }
+        orderRepository.saveAll(orderList);
     }
 }
