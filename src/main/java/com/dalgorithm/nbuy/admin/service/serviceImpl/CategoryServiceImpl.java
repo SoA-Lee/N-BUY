@@ -10,7 +10,6 @@ import com.dalgorithm.nbuy.exception.impl.category.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,7 +28,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public void addCategory(String categoryName) {
 
         if (categoryRepository.findByCategoryName(categoryName).isPresent()){
@@ -45,7 +43,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public void updateCategory(CategoryDto categoryDto) {
 
         Category category = categoryRepository.findById(categoryDto.getId())
@@ -58,7 +55,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public void deleteCategory(long id) {
         categoryRepository.deleteById(id);
     }

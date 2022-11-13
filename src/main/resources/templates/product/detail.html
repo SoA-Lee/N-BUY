@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <link rel="stylesheet" href="/static/css/detail.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $('form[name=deleteForm]').on('submit', function() {
+                if (!confirm(' 상품을 삭제하시겠습니까? ')) {
+                    return false;
+                }
+            });
+
+        $(function () {
+
+            $('#submitForm').on('submit', function () {
+
+                if (!confirm('같이구매 신청을 하시겠습니까?')) {
+                    return false;
+                }
+
+                var $thisForm = $(this); // 현재 폼 잡기
+
+                var url = '/api/course/req.api';
+                var parameter = {
+                    courseId: $thisForm.find('input[name=id]').val()
+                };
+                axios.post(url, parameter).then(function (response) {
+                    console.log(response);
+                    console.log(response.data);
+
+                    response.data = response.data || {}; // 객체 없을 경우, 초기화
+                    response.data.header = response.data.header || {};
+
+                    if (!response.data.header.result) {
+                        alert(response.data.header.message);
+                        return false;
+                    }
+
+                    //정상적일때
+                    alert('상품 참여가 정상적으로 신청되었습니다. ');
+                    location.href = '/';
+
+
+                }).catch(function (err) {
+                    console.log(err);
+                });
+
+                return false;
+            });
+
+        });
+    </script>
+</head>
+<body>
+<h1>상품 상세 정보 </h1>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
+
+    <div>
+        <h2>상품명: <span th:text="${detail.productTitle}">사과</span></h2>
+        <p>아래 링크를 통해 상품의 세부 정보 확인이 가능합니다.</p>
+        <a th:href="${detail.productUrl}">상품 구매 링크 확인</a>
+    </div>
+
+    <div>
+        <p>상품 가격: <span th:text="${detail.price} + 원">0</span></p>
+        <p>N분의 금액: <span th:text="${detail.price / detail.totalPeople} + 원">0</span></p>
+    </div>
+
+    <div>
+        <p>나눔 장소: <span th:text="${detail.sharingPlace}">홍대입구역</span></p>
+        <p>나눔 날짜: <span th:text="${detail.sharingDay}">2023년 1월 20일</span></p>
+    </div>
+
+    <div>
+        <p>
+            총 인원 : <span th:text="${detail.totalPeople}"></span>
+            / 현재 인원 : <span th:text="${detail.numberApplication}" class="curNumber"></span>
+        </p>
+
+    </div>
+
+    <div>
+        <form id="submitForm" method="post" th:if="${detail.productStatus.toString().equals('PROGRESS')}">
+            <input type="hidden" name="id" th:value="${detail.id}"/>
+            <button type="submit" value="COMPLETE">같이구매 신청</button>
+        </form>
+    </div>
+
+    <div style="float:right;" th:if="${curUser.equals(detail.recruiterId)}">
+    <div>
+        <form name="deleteForm" method="post"
+              action="/products/delete">
+            <input type="hidden" name="id" th:value="${detail.id}"/>
+            <button type="submit">상품 삭제</button>
+        </form>
+    </div>
+
+    <div>
+        <a href="/products/list">상품 목록</a>
+    </div>
+
+</body>
+</html>

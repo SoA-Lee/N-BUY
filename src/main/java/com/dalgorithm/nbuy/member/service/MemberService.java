@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 public interface MemberService {
 
     /**
