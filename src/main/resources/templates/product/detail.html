@@ -38,11 +38,11 @@
                     response.data = response.data || {};
                     response.data.header = response.data.header || {};
 
-                    alert('상품 주문이 정상적으로 신청되었습니다.');
+                    alert('상품 주문이 정상적으로 신청되었습니다. 마이페이지를 확인해주세요.');
                     location.href = '/products/list';
 
                 }).catch(function (err) {
-                    alert('상품 주문이 처리되지 않았습니다.');
+                    alert('상품 주문이 처리되지 않았습니다. 상품의 중복 신청은 불가능합니다.');
                     location.href = '/products/list';
                 });
                 return false;
@@ -91,7 +91,7 @@
         <form name="deleteForm" method="post"
               action="/products/delete">
             <input type="hidden" name="id" th:value="${detail.id}"/>
-            <button type="submit">상품 삭제</button>
+            <button type="submit">모집 취소</button>
         </form>
     </div>
 

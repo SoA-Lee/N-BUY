@@ -31,10 +31,6 @@ public class Product {
     private String sharingPlace;
     private String sharingDay;
     private LocalDateTime regDate;
-
-    private String imgName;
-    private String imgUrl;
-
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 

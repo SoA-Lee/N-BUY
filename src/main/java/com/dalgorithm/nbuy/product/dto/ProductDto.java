@@ -32,9 +32,6 @@ public class ProductDto {
     private String sharingDay;
     private LocalDateTime regDate;
 
-    private String imgName;
-    private String imgUrl;
-
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
@@ -51,8 +48,6 @@ public class ProductDto {
                 .sharingPlace(product.getSharingPlace())
                 .sharingDay(product.getSharingDay())
                 .regDate(product.getRegDate())
-                .imgName(product.getImgName())
-                .imgUrl(product.getImgUrl())
                 .productStatus(product.getProductStatus())
                 .build();
     }

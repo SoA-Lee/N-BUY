@@ -7,6 +7,7 @@ import com.dalgorithm.nbuy.order.repository.OrderRepository;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
 import com.dalgorithm.nbuy.product.dto.ProductParam;
 import com.dalgorithm.nbuy.product.entity.Product;
+import com.dalgorithm.nbuy.product.entity.ProductStatus;
 import com.dalgorithm.nbuy.product.repository.ProductRepository;
 import com.dalgorithm.nbuy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -76,13 +77,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(long id, Principal principal) {
-        ProductDto productDto = ProductDto.fromEntity(productRepository.findById(id)
-                        .orElseThrow(ProductNotFoundException::new));
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
-        if (productDto.getRecruiterId().equals(principal.getName())){
-            productRepository.deleteById(id);
+        if (product.getRecruiterId().equals(principal.getName())){
+            product.setProductStatus(ProductStatus.WITHDRAW);
+
             setOrderStatusWithdraw(id);
             log.info("[상품 번호] " + id + " 상품을 삭제합니다.");
+
+            productRepository.save(product);
         } else throw new RuntimeException("해당 상품에 접근 권한이 존재하지 않습니다.");
     }
 

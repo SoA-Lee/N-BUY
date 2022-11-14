@@ -5,6 +5,10 @@ import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.dto.MemberFormDto;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.service.MemberService;
+import com.dalgorithm.nbuy.order.dto.OrderDto;
+import com.dalgorithm.nbuy.order.service.OrderService;
+import com.dalgorithm.nbuy.product.dto.ProductDto;
+import com.dalgorithm.nbuy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +30,8 @@ import java.security.Principal;
 public class MemberController {
 
     private final MemberService memberService;
+    private final OrderService orderService;
+    private final ProductService productService;
 
     @RequestMapping("/login")
     public String login() {
@@ -109,5 +116,22 @@ public class MemberController {
         }
 
         return "redirect:/members/logout";
+    }
+
+    @GetMapping("/recruit_status")
+    public String checkMyRecruit(Model model, Principal principal) {
+        String userId = principal.getName();
+//        List<ProductDto> list = productService.myRecruit(userId);
+
+        return "member/my_recruit";
+    }
+
+    @GetMapping("/apply_status")
+    public String checkMyApply(Model model, Principal principal) {
+        String applicantId = principal.getName();
+        List<OrderDto> list = orderService.myApply(applicantId);
+
+        model.addAttribute("list", list);
+        return "member/my_apply";
     }
 }
