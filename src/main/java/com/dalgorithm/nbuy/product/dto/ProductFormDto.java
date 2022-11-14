@@ -32,7 +32,4 @@ public class ProductFormDto {
 
     @NotNull(message = "나눔 날짜는 필수 항목입니다.")
     private String sharingDay;
-
-    private String imgName;
-    private String imgUrl;
 }
