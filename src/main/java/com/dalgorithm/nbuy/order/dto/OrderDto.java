@@ -31,13 +31,14 @@ public class OrderDto {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
+    private String productTitle;
+
     public static OrderDto fromEntity(Order order) {
         return OrderDto.builder()
                 .id(order.getId())
                 .productId(order.getProductId())
                 .applicantId(order.getApplicantId())
                 .orderDate(order.getOrderDate())
-                .productStatus(order.getProductStatus())
                 .build();
     }
 

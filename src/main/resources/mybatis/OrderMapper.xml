@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalgorithm.nbuy.order.mapper.OrderMapper">
+
+    <select id="selectListMyOrder" resultType="com.dalgorithm.nbuy.order.dto.OrderDto">
+        select od.*
+             , pd.product_title, pd.product_status
+        from orders od
+                 join product pd on od.product_id = pd.id
+        where od.applicant_id in (#{applicantId})
+        order by od.order_date desc
+    </select>
+
+</mapper>

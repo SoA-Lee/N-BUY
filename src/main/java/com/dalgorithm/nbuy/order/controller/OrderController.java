@@ -3,6 +3,7 @@ package com.dalgorithm.nbuy.order.controller;
 import com.dalgorithm.nbuy.order.entity.OrderInput;
 import com.dalgorithm.nbuy.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +20,26 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/request")
-    public String courseReq(Model model, @RequestBody OrderInput parameter
+    public String orderReq(@RequestBody OrderInput parameter
             , Principal principal) {
 
         parameter.setApplicantId(principal.getName());
         orderService.reqPurchase(parameter);
 
-        model.addAttribute("successMessage", "같이구매 신청이 완료되었습니다. 마이페이지를 확인해주세요.");
         return "index";
+    }
+
+    @PostMapping("/cancel")
+    public String orderCancel(Model model
+            , @RequestBody OrderInput parameter
+            , Principal principal) {
+
+        parameter.setApplicantId(principal.getName());
+        orderService.reqPurchase(parameter);
+
+        String userId = principal.getName();
+
+
+        return "redirect:/members/apply_status";
     }
 }

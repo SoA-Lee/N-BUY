@@ -21,19 +21,15 @@
 <body>
 
 <h1>회원 정보</h1>
-<!--<div th:replace="/fragments/header.html :: fragment-body-menu"></div>-->
-
 <div>
     <hr/>
     <a href="/members/info">회원 정보 수정</a>
     |
-    <a href="/members/leader">My 구매 진행</a>
+    <a href="/members/recruit_status">My 같이구매 모집</a>
     |
-    <a href="/members/applicant">My 구매 신청</a>
+    <a href="/members/apply_status">My 같이구매 신청</a>
     <hr/>
 </div>
-
-
 
 <div>
     <form id="updateForm" method="post">
@@ -99,6 +95,9 @@
             <a href="/members/withdraw"> 회원 탈퇴 </a>
         </div>
     </form>
+    <div>
+        <a href="/"> 메인화면 이동 </a>
+    </div>
 </div>
 
 
