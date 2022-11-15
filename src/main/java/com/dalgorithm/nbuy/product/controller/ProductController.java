@@ -1,5 +1,6 @@
 package com.dalgorithm.nbuy.product.controller;
 
+import com.dalgorithm.nbuy.admin.controller.AdminProductController;
 import com.dalgorithm.nbuy.admin.dto.CategoryDto;
 import com.dalgorithm.nbuy.admin.service.CategoryService;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
@@ -37,26 +38,7 @@ public class ProductController {
     public String productList(Model model, @PageableDefault(size = 5, sort = "id",
             direction = Sort.Direction.DESC ) Pageable pageable, ProductParam productParam) {
 
-        Page<ProductDto> list = productService.list(productParam, pageable);
-
-        int startPage = Math.max(1, list.getPageable().getPageNumber() - 4);
-        int endPage = Math.min(list.getPageable().getPageNumber() + 4, list.getTotalPages());
-
-        model.addAttribute("list", list);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        int productTotalCount = 0;
-
-        List<CategoryDto> categoryList = categoryService.frontList(CategoryDto.builder().build());
-        if (categoryList != null) {
-            for(CategoryDto x : categoryList) {
-                productTotalCount += x.getProductCount();
-            }
-        }
-
-        model.addAttribute("categoryList", categoryList);
-        model.addAttribute("productTotalCount", productTotalCount);
+        AdminProductController.setPageWithCategory(model, pageable, productParam, productService, categoryService);
 
         return "product/list";
     }
@@ -111,11 +93,11 @@ public class ProductController {
         return "product/detail";
     }
 
-    @PostMapping("/delete")
-    public String productDelete(Model model, ProductParam productParam, Principal principal) {
+    @PostMapping("/cancel")
+    public String productCancel(Model model, ProductParam productParam, Principal principal) {
 
-        productService.deleteProduct(productParam.getId(), principal.getName());
-        model.addAttribute("successMessage", "상품 삭제가 완료되었습니다. 마이 페이지를 확인해주세요.");
+        productService.cancelRecruitProduct(productParam.getId(), principal.getName());
+        model.addAttribute("successMessage", "상품 모집이 취소 되었습니다. 마이 페이지를 확인해주세요.");
 
         return "index";
     }

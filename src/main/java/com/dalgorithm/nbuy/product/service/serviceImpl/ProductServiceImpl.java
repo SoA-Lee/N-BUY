@@ -75,14 +75,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(long id, String userId) {
+    public void cancelRecruitProduct(long id, String userId) {
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         if (product.getRecruiterId().equals(userId)){
             product.setProductStatus(ProductStatus.WITHDRAW);
 
             setOrderStatusWithdraw(id);
-            log.info("[상품 번호] " + id + " 상품을 삭제합니다.");
+            log.info("[상품 번호] " + id + " 상품 모집을 취소합니다.");
 
             productRepository.save(product);
         } else throw new AccessDeniedException("해당 상품에 접근 권한이 존재하지 않습니다.");
@@ -92,6 +92,13 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> myRecruit(String recruiterId) {
         List<Product> productList = productRepository.findByRecruiterId(recruiterId);
         return ProductDto.fromEntity(productList);
+    }
+
+    @Override
+    public void deleteProduct(long id) {
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        log.info("[상품 번호 - " + product.getId() + "] 상품을 삭제합니다.");
+        productRepository.deleteById(id);
     }
 
     private void setOrderStatusWithdraw(long id) {

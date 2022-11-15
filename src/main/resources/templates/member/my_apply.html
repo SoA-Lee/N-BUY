@@ -37,7 +37,7 @@
                     location.reload();
 
                 }).catch(function(err) {
-                    alert('같이구매 취소 처리되지 않았습니다.');
+                    alert('같이구매 취소 신청이 실패하였습니다. \n 인원 모집이 마감된 상품은 취소가 불가능합니다.');
                     console.log(err);
                 });
                 return false;
@@ -90,7 +90,7 @@
             <td>
                 <p style="background-color: greenyellow" th:if="${x.productStatus.toString().equals('PROGRESS')}">모집 진행</p>
                 <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('FINISH')}">모집 완료</p>
-                <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('WITHDRAW')}">모집 중단</p>
+                <p style="background-color: darkgrey" th:if="${x.productStatus.toString().equals('WITHDRAW')}">모집 중단</p>
             </td>
             <td>
                 <p th:if="${x.orderStatus.toString().equals('REQ')}">신청 완료</p>

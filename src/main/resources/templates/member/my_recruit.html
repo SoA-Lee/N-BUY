@@ -49,7 +49,7 @@
             <td>
                 <p style="background-color: greenyellow" th:if="${x.productStatus.toString().equals('PROGRESS')}">모집 진행</p>
                 <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('FINISH')}">모집 완료</p>
-                <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('WITHDRAW')}">모집 중단</p>
+                <p style="background-color: darkgrey" th:if="${x.productStatus.toString().equals('WITHDRAW')}">모집 중단</p>
             </td>
             <td>
                 <p>

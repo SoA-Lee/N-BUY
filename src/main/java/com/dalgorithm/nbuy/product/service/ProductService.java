@@ -24,8 +24,11 @@ public interface ProductService {
     ProductDto detailProduct(long id);
 
     @Transactional
-    void deleteProduct(long id, String userId);
+    void cancelRecruitProduct(long id, String userId);
 
     @Transactional(readOnly = true)
     List<ProductDto> myRecruit(String recruiterId);
+
+    @Transactional
+    void deleteProduct(long id);
 }
