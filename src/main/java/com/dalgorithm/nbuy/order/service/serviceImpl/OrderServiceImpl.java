@@ -1,6 +1,8 @@
 package com.dalgorithm.nbuy.order.service.serviceImpl;
 
 import com.dalgorithm.nbuy.exception.impl.order.DuplicatedOrderInfoException;
+import com.dalgorithm.nbuy.exception.impl.order.OrderNotFoundException;
+import com.dalgorithm.nbuy.exception.impl.product.WithdrawnProductException;
 import com.dalgorithm.nbuy.order.dto.OrderDto;
 import com.dalgorithm.nbuy.order.entity.Order;
 import com.dalgorithm.nbuy.order.entity.OrderInput;
@@ -37,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         if (parameter.getApplicantId().equals(product.getRecruiterId())) {
             throw new RuntimeException("본인의 같이구매 상품에 대해서는 주문 신청이 불가능합니다.");
         } else if (product.getProductStatus().equals(ProductStatus.WITHDRAW)) {
-            throw new RuntimeException("관리자 및 등록자에 의해 삭제된 상품입니다.");
+            throw new WithdrawnProductException();
         }
 
         long count = orderRepository.countByProductIdAndApplicantIdAndOrderStatusIn(parameter.getProductId(), parameter.getApplicantId(), Collections.singleton(OrderStatus.REQ));
@@ -46,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
             throw new DuplicatedOrderInfoException();
         }
 
-        updateProductApplicationStatus(product);
+        increaseProductApplyStatus(product);
 
         Order order = Order.builder()
                 .productId(product.getId())
@@ -67,7 +69,19 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.selectListMyOrder(parameter);
     }
 
-    private void updateProductApplicationStatus(Product product) {
+    @Override
+    public void cancelPurchase(OrderInput parameter) {
+        Order order = orderRepository.findById(parameter.getOrderId()).orElseThrow(OrderNotFoundException::new);
+
+        decreaseProductApplyStatus(parameter.getProductId());
+
+        order.setOrderStatus(OrderStatus.CANCEL);
+        orderRepository.save(order);
+
+        log.info("[" + order.getApplicantId() + "]" + "님의 [주문 번호-"+ order.getId() +"] 취소 완료");
+    }
+
+    private void increaseProductApplyStatus(Product product) {
         int numberApplication = product.getNumberApplication() + 1;
 
         if (numberApplication == product.getTotalPeople()) {
@@ -76,6 +90,19 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("신청 인원이 모집 인원 수를 수를 초과하였습니다.");
         }
         product.setNumberApplication(numberApplication);
+        productRepository.save(product);
+    }
+
+    private void decreaseProductApplyStatus(long productId) {
+        Product product = productRepository.findByIdWithPessimisticLock(productId);
+
+        if (product.getProductStatus().equals(ProductStatus.FINISH)) {
+            throw new RuntimeException("인원 모집이 마감되어 취소가 불가능합니다.");
+        }
+
+        int numberApplication = product.getNumberApplication() - 1;
+        product.setNumberApplication(numberApplication);
+
         productRepository.save(product);
     }
 }

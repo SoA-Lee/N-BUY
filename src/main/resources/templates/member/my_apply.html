@@ -9,19 +9,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-
             $('.row-buttons button').on('click', function() {
 
-                var id = $(this).val();
+                // var id = $(this).val(); // id
+                var $this = $(this); // 현재 버튼
+                var $tr = $this.closest('tr'); // 가장 가까운 tr
 
-                var msg = '같이구매 상품 참여를 취소 처리 하시겠습니까?';
-                if (!confirm(msg)) {
+                var id = $this.val();
+                var productId = $tr.find('input[name=productId]').val();
+
+                if (!confirm('같이구매 상품 참여를 취소 처리 하시겠습니까?')) {
                     return false;
                 }
 
                 var url = '/orders/cancel';
                 var parameter = {
-                    orderId: id
+                    orderId: id, productId: productId
                 };
                 axios.post(url, parameter).then(function(response) {
                     console.log(response);
@@ -34,14 +37,13 @@
                     location.reload();
 
                 }).catch(function(err) {
-                    alert('같이구매 취소 처리가 진행되지 않았습니다.');
+                    alert('같이구매 취소 처리되지 않았습니다.');
                     console.log(err);
                 });
                 return false;
             });
         });
     </script>
-
 </head>
 <body>
 
@@ -98,6 +100,7 @@
             <td>
                 <div class="row-buttons" th:if="${x.orderStatus.toString().equals('REQ')}">
                     <button type="button" th:value="${x.id}">같이구매 취소 처리</button>
+                    <input type="hidden" name="productId" th:value="${x.productId}"/>
                 </div>
             </td>
         </tr>
