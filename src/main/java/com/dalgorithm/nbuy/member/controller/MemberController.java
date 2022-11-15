@@ -120,8 +120,9 @@ public class MemberController {
 
     @GetMapping("/recruit_status")
     public String checkMyRecruit(Model model, Principal principal) {
-        String userId = principal.getName();
-//        List<ProductDto> list = productService.myRecruit(userId);
+        String recruiterId = principal.getName();
+        List<ProductDto> list = productService.myRecruit(recruiterId);
+        model.addAttribute("list", list);
 
         return "member/my_recruit";
     }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <link rel="stylesheet" href="/static/css/list.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h1>회원 정보</h1>
+<div>
+    <hr/>
+    <a href="/members/info">회원 정보 수정</a>
+    |
+    <a href="/members/recruit_status">My 같이구매 모집</a>
+    |
+    <a href="/members/apply_status">My 같이구매 신청</a>
+    <hr/>
+</div>
+
+
+<div class="list">
+    <table>
+        <thead>
+        <tr>
+            <th> NO </th>
+            <th> 상품 번호 </th>
+            <th> 상품 이름 </th>
+            <th> 등록 날짜 </th>
+            <th> 상품 현황 </th>
+            <th> 인원 확인 </th>
+        </tr>
+        </thead>
+
+        <tbody id="productList">
+        <tr th:each="x, i: ${list}">
+            <td th:text="${i.index + 1}">1</td>
+            <td>
+                <p th:text="${x.id}">상품번호</p>
+            </td>
+            <td>
+                <a th:text="${x.productTitle}"
+                   th:href="${'/products/detail/' + x.id}">상품명</a>
+            </td>
+            <td>
+                <p th:text="${#temporals.format(x.regDate, 'yyyy.MM.dd HH:mm')}">2021.01.01</p>
+            </td>
+            <td>
+                <p style="background-color: greenyellow" th:if="${x.productStatus.toString().equals('PROGRESS')}">모집 진행</p>
+                <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('FINISH')}">모집 완료</p>
+                <p style="background-color: orangered" th:if="${x.productStatus.toString().equals('WITHDRAW')}">모집 중단</p>
+            </td>
+            <td>
+                <p>
+                    총 인원 : <span th:text="${x.totalPeople}"></span>
+                    현재 인원 : <span th:text="${x.numberApplication}"
+                                  class="curNumber"></span>
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/"> 메인화면 </a>
+    </div>
+</div>
+</body>
+</html>

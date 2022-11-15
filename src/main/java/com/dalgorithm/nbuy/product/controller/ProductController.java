@@ -114,7 +114,7 @@ public class ProductController {
     @PostMapping("/delete")
     public String productDelete(Model model, ProductParam productParam, Principal principal) {
 
-        productService.deleteProduct(productParam.getId(), principal);
+        productService.deleteProduct(productParam.getId(), principal.getName());
         model.addAttribute("successMessage", "상품 삭제가 완료되었습니다. 마이 페이지를 확인해주세요.");
 
         return "index";
