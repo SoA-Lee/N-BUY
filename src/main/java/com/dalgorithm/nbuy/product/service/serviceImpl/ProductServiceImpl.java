@@ -7,7 +7,9 @@ import com.dalgorithm.nbuy.order.repository.OrderRepository;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
 import com.dalgorithm.nbuy.product.dto.ProductParam;
 import com.dalgorithm.nbuy.product.entity.Product;
+import com.dalgorithm.nbuy.product.entity.ProductDocument;
 import com.dalgorithm.nbuy.product.entity.ProductStatus;
+import com.dalgorithm.nbuy.product.repository.EsProductRepository;
 import com.dalgorithm.nbuy.product.repository.ProductRepository;
 import com.dalgorithm.nbuy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+
+    private final EsProductRepository esProductRepository;
 
     @Override
     public Page<ProductDto> list(ProductParam param, Pageable pageable) {
@@ -99,6 +106,23 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         log.info("[상품 번호 - " + product.getId() + "] 상품을 삭제합니다.");
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductDto> searchProduct(String productTitle) {
+        return esProductRepository.findByProductTitleContains(productTitle)
+                .stream()
+                .map(ProductDto::fromEs)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Scheduled(cron = "${scheduler.save.product}")
+    public void saveAllProductDocuments() {
+        List<ProductDocument> productDocuments
+                = productRepository.findAll().stream().map(ProductDocument::from).collect(Collectors.toList());
+        log.info("[" + LocalDateTime.now() + "] : ES REPO 업데이트");
+        esProductRepository.saveAll(productDocuments);
     }
 
     private void setOrderStatusWithdraw(long id) {

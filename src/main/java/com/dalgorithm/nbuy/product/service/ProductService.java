@@ -31,4 +31,10 @@ public interface ProductService {
 
     @Transactional
     void deleteProduct(long id);
+
+    @Transactional
+    void saveAllProductDocuments();
+
+    @Transactional(readOnly = true)
+    List<ProductDto> searchProduct(String productTitle);
 }

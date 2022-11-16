@@ -10,15 +10,13 @@ import com.dalgorithm.nbuy.product.entity.Product;
 import com.dalgorithm.nbuy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -100,6 +98,15 @@ public class ProductController {
         model.addAttribute("successMessage", "상품 모집이 취소 되었습니다. 마이 페이지를 확인해주세요.");
 
         return "index";
+    }
+
+    @GetMapping("/search")
+    public String searchByName(@RequestParam String productTitle, Model model){
+
+        List<ProductDto> list = productService.searchProduct(productTitle);
+        model.addAttribute("list", list);
+
+        return "product/search";
     }
 
 }

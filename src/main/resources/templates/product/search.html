@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <link rel="stylesheet" href="/static/css/list.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<h1>같이구매 상품 검색</h1>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
+
+<div class="search-form">
+    <form method="get" action="/products/search">
+        <input th:value="${param.productTitle}" type="search"
+               name="productTitle" placeholder="검색어 입력"/>
+        <button type="submit">검색</button>
+    </form>
+</div>
+
+<div class="list">
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>상품 번호</th>
+            <th>상품명</th>
+            <th>같이구매 진행자</th>
+            <th>총 금액</th>
+            <th>N분의 금액</th>
+            <th>나눔 장소</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr style="text-align: center" th:each="product, i : ${list}">
+            <td th:text="${i.index + 1}">1</td>
+            <td th:text="${product.id}">1</td>
+            <td>
+                <a th:text="${product.productTitle}"
+                   th:href="${'/products/detail/' + product.id}">휴지</a>
+            <td th:text="${product.recruiterId}">홍길동</td>
+            <td th:text="${product.price} + 원">50000원</td>
+            <td th:text="${product.price / product.totalPeople} + 원">10000원</td>
+            <td th:text="${product.sharingPlace}">홍대입구역 3번 출구</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/products/list"> 전체 목록 </a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.dalgorithm.nbuy.product.dto;
 
 import com.dalgorithm.nbuy.product.entity.Product;
+import com.dalgorithm.nbuy.product.entity.ProductDocument;
 import com.dalgorithm.nbuy.product.entity.ProductStatus;
 import lombok.*;
 
@@ -55,5 +56,19 @@ public class ProductDto {
     public static List<ProductDto> fromEntity(List<Product> productList) {
         return productList.stream().map(ProductDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public static ProductDto fromEs(ProductDocument productDocument) {
+        return ProductDto.builder()
+                .id(productDocument.getId())
+                .categoryId(productDocument.getCategoryId())
+                .recruiterId(productDocument.getRecruiterId())
+                .productTitle(productDocument.getProductTitle())
+                .price(productDocument.getPrice())
+                .totalPeople(productDocument.getTotalPeople())
+                .numberApplication(productDocument.getNumberApplication())
+                .sharingPlace(productDocument.getSharingPlace())
+                .productStatus(productDocument.getProductStatus())
+                .build();
     }
 }
