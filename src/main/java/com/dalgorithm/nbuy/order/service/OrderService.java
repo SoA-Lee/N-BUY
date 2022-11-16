@@ -18,4 +18,10 @@ public interface OrderService {
      */
     @Transactional(readOnly = true)
     List<OrderDto> myApply(String applicantId);
+
+    /**
+     * 같이구매 참여 취소
+     */
+    @Transactional
+    void cancelPurchase(OrderInput parameter);
 }

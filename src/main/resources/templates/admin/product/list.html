@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>N-BUY</title>
+    <link rel="stylesheet" href="/static/css/list.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('form[name=deleteForm]').on('submit', function() {
+                if (!confirm(' 상품을 완전히 삭제하시겠습니까? ')) {
+                    return false;
+                }
+            });
+
+            $('#searchProductId').on('change', function() {
+                var id = $(this).val();
+                location.href = '?searchProductId=' + id;
+            });
+        });
+    </script>
+</head>
+<body>
+<div th:replace="/fragments/header.html :: fragment-body-menu"></div>
+<h1>관리자 상품 관리</h1>
+
+<div class="list">
+    <a href="?">
+        전체 (<span th:text="${productTotalCount}">0</span>)</a>
+
+    <th:block th:each="y : ${categoryList}">
+        |
+        <a th:href="'/admin/products?categoryId=' + ${y.id}">
+            <span th:text="${y.categoryName}">카테고리명</span>
+            (<span th:text="${y.productCount}">0</span>)</a>
+    </th:block>
+    <hr/>
+</div>
+
+<div class="list">
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>상품명</th>
+            <th>같이구매 진행자</th>
+            <th>총 금액</th>
+            <th>N분의 금액</th>
+            <th>나눔 장소</th>
+            <th>인원 현황</th>
+            <th>진행 상태</th>
+            <th>비고</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr style="text-align: center" th:each="product : ${list}">
+            <td th:text="${product.id}">1</td>
+            <td>
+                <a th:text="${product.productTitle}"
+                   th:href="${'/products/detail/' + product.id}">휴지</a>
+            <td th:text="${product.recruiterId}">홍길동</td>
+            <td th:text="${product.price} + 원">50000원</td>
+            <td th:text="${product.price / product.totalPeople} + 원">10000원</td>
+            <td th:text="${product.sharingPlace}">홍대입구역 3번 출구</td>
+            <td>
+                <p>
+                    총 인원 : <span th:text="${product.totalPeople}"></span>
+                    현재 인원 : <span th:text="${product.numberApplication}"
+                                  class="curNumber"></span>
+                </p>
+            </td>
+            <td>
+                <p th:if="${product.productStatus.toString().equals('PROGRESS')}" style="background-color: greenyellow">신청 가능</p>
+                <p th:if="${product.productStatus.toString().equals('FINISH')}" style="background-color: red">신청 마감</p>
+                <p th:if="${product.productStatus.toString().equals('WITHDRAW')}" style="background-color: darkgrey">신청 불가</p>
+            </td>
+            <td>
+                <div>
+                    <form name="deleteForm" method="post"
+                          action="/admin/products/delete">
+                        <input type="hidden" name="id" th:value="${product.id}"/>
+                        <button type="submit">삭제</button>
+                    </form>
+                </div>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <nav style="text-align: center;">
+        <div class="pager" style="text-align: center">
+            <th:block th:each="page:${#numbers.sequence(startPage,endPage)}">
+                <a th:if="${page != nowPage}"
+                   th:href="@{/admin/products(page=${page})}"
+                   th:text="${page}"></a>
+                <strong th:if="${page==nowPage}" th:text="${page}"
+                        style="color:red"></strong>
+            </th:block>
+        </div>
+    </nav>
+
+    <div>
+        <a href="/products/list"> 전체 목록 </a>
+    </div>
+</div>
+
+</body>
+</html>

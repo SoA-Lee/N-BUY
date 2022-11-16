@@ -16,9 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +29,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
-
 
     @Override
     public Page<ProductDto> list(ProductParam param, Pageable pageable) {
@@ -76,17 +75,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(long id, Principal principal) {
+    public void cancelRecruitProduct(long id, String userId) {
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
-        if (product.getRecruiterId().equals(principal.getName())){
+        if (product.getRecruiterId().equals(userId)){
             product.setProductStatus(ProductStatus.WITHDRAW);
 
             setOrderStatusWithdraw(id);
-            log.info("[상품 번호] " + id + " 상품을 삭제합니다.");
+            log.info("[상품 번호] " + id + " 상품 모집을 취소합니다.");
 
             productRepository.save(product);
-        } else throw new RuntimeException("해당 상품에 접근 권한이 존재하지 않습니다.");
+        } else throw new AccessDeniedException("해당 상품에 접근 권한이 존재하지 않습니다.");
+    }
+
+    @Override
+    public List<ProductDto> myRecruit(String recruiterId) {
+        List<Product> productList = productRepository.findByRecruiterId(recruiterId);
+        return ProductDto.fromEntity(productList);
+    }
+
+    @Override
+    public void deleteProduct(long id) {
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        log.info("[상품 번호 - " + product.getId() + "] 상품을 삭제합니다.");
+        productRepository.deleteById(id);
     }
 
     private void setOrderStatusWithdraw(long id) {

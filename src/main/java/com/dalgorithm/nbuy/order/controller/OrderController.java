@@ -24,21 +24,19 @@ public class OrderController {
             , Principal principal) {
 
         parameter.setApplicantId(principal.getName());
+        System.out.println(parameter.getProductId());
         orderService.reqPurchase(parameter);
 
         return "index";
     }
 
     @PostMapping("/cancel")
-    public String orderCancel(Model model
-            , @RequestBody OrderInput parameter
+    public String orderCancel(@RequestBody OrderInput parameter
             , Principal principal) {
 
         parameter.setApplicantId(principal.getName());
-        orderService.reqPurchase(parameter);
-
-        String userId = principal.getName();
-
+        System.out.println(parameter.getProductId());
+        orderService.cancelPurchase(parameter);
 
         return "redirect:/members/apply_status";
     }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
+import java.util.List;
 
 public interface ProductService {
 
@@ -24,5 +24,11 @@ public interface ProductService {
     ProductDto detailProduct(long id);
 
     @Transactional
-    void deleteProduct(long id, Principal principal);
+    void cancelRecruitProduct(long id, String userId);
+
+    @Transactional(readOnly = true)
+    List<ProductDto> myRecruit(String recruiterId);
+
+    @Transactional
+    void deleteProduct(long id);
 }

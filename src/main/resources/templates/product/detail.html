@@ -89,7 +89,7 @@
     <div style="float:right;" th:if="${curUser.equals(detail.recruiterId)}">
     <div>
         <form name="deleteForm" method="post"
-              action="/products/delete">
+              action="/products/cancel">
             <input type="hidden" name="id" th:value="${detail.id}"/>
             <button type="submit">모집 취소</button>
         </form>
@@ -97,6 +97,7 @@
 
     <div>
         <a href="/products/list">상품 목록</a>
+    </div>
     </div>
 
 </body>
