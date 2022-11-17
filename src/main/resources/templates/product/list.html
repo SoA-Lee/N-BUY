@@ -6,15 +6,6 @@
     <link rel="stylesheet" href="/static/css/list.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-
-            $('#searchProductId').on('change', function() {
-                var id = $(this).val();
-                location.href = '?searchProductId=' + id;
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -22,7 +13,7 @@
 <div th:replace="/fragments/header.html :: fragment-body-menu"></div>
 
 <div class="list">
-    <a href="?">
+    <a href="?" class="total-count">
         전체 (<span th:text="${productTotalCount}">0</span>)</a>
 
     <th:block th:each="y : ${categoryList}">
@@ -31,6 +22,14 @@
             <span th:text="${y.categoryName}">카테고리명</span>
             (<span th:text="${y.productCount}">0</span>)</a>
     </th:block>
+
+    <div class="search-form">
+        <form method="get" action="/products/search">
+            <input th:value="${param.productTitle}" type="search"
+                   name="productTitle" placeholder="검색어 입력"/>
+            <button type="submit">검색</button>
+        </form>
+    </div>
     <hr/>
 </div>
 

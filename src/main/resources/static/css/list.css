@@ -11,7 +11,7 @@
 .search-form {
     position: relative;
     padding: 5px 0 10px 0;
-    text-align: right;
+    text-align: left;
 }
 
 .search-form .total-count {
