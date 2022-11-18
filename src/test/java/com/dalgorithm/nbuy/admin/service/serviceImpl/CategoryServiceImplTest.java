@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -82,5 +83,55 @@ class CategoryServiceImplTest {
 
         // then
         assertEquals(exception.getMessage(), "이미 존재하는 카테고리입니다.");
+    }
+
+    @Test
+    @DisplayName("카테고리 업데이트 성공")
+    void updateCategory() {
+
+        Long id = 1L;
+
+        Category category = Category.builder()
+                .id(id)
+                .categoryName("test")
+                .build();
+
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(id)
+                .categoryName("update")
+                .build();
+
+        // given
+        given(categoryRepository.findById(anyLong()))
+                .willReturn(Optional.of(category));
+
+        // when
+        categoryService.updateCategory(categoryDto);
+
+        // then
+        assertEquals(category.getCategoryName(), "update");
+    }
+
+    @Test
+    @DisplayName("카테고리 업데이트 실패 - 이미 존재하는 카테고리")
+    void updateCategoryFailedByCategoryNotFound() {
+        Long id = 1L;
+
+        CategoryDto category = CategoryDto.builder()
+                .id(id)
+                .categoryName("카테고리테스트")
+                .build();
+
+        // given
+        given(categoryRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+
+        // when
+        AbstractException exception = assertThrows(
+                AbstractException.class,
+                () -> categoryService.updateCategory(category));
+
+        // then
+        assertEquals(exception.getMessage(), "존재하지 않는 카테고리입니다.");
     }
 }
