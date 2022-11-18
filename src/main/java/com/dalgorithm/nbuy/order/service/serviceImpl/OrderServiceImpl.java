@@ -2,6 +2,7 @@ package com.dalgorithm.nbuy.order.service.serviceImpl;
 
 import com.dalgorithm.nbuy.exception.impl.order.DuplicatedOrderInfoException;
 import com.dalgorithm.nbuy.exception.impl.order.OrderNotFoundException;
+import com.dalgorithm.nbuy.exception.impl.order.RecruiterEqualApplicantException;
 import com.dalgorithm.nbuy.exception.impl.product.WithdrawnProductException;
 import com.dalgorithm.nbuy.order.dto.OrderDto;
 import com.dalgorithm.nbuy.order.entity.Order;
@@ -37,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
         Product product = productRepository.findByIdWithPessimisticLock(parameter.getProductId());
 
         if (parameter.getApplicantId().equals(product.getRecruiterId())) {
-            throw new RuntimeException("본인의 같이구매 상품에 대해서는 주문 신청이 불가능합니다.");
+            throw new RecruiterEqualApplicantException();
         } else if (product.getProductStatus().equals(ProductStatus.WITHDRAW)) {
             throw new WithdrawnProductException();
         }

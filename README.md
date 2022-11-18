@@ -20,8 +20,9 @@
 <div align=center> 
 <br>
     <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"> 
-    <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=MariaDB&logoColor=white">
+    <img src="https://img.shields.io/badge/Mysql-4479A1?style=for-the-badge&logo=Mysql&logoColor=white">
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
+    <img src="https://img.shields.io/badge/Elasticsearch-005571?style=for-the-badge&logo=Elasticsearch&logoColor=white">
 <br>
     <img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=Thymeleaf&logoColor=white">
     <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
@@ -32,31 +33,34 @@
 
 ## 📋 상세 기능
 > 공통 (Common)
-- [ ] 회원 가입 및 가입인증 이메일
-  - [ ] JavaMailSender & Google SMTP 사용
-  - [ ] 우편번호 API 적용 [(📩 우편번호 서비스)](https://postcode.map.daum.net/guide)
-- [ ] 로그인 및 로그아웃
-  - [ ] Spring Security 설정
-  - [ ] 비밀번호 찾기 (비밀번호 초기화)
-- [ ] 탈퇴
+- [X] 회원 가입 및 가입인증 이메일
+  - [X] JavaMailSender & Google SMTP 사용
+  - [X] 우편번호 API 적용 [(📩 우편번호 서비스)](https://postcode.map.daum.net/guide)
+- [X] 로그인 및 로그아웃
+  - [X] Spring Security 설정
+- [X] 탈퇴
 
 > 일반 회원 (User)
-- [ ] 상품 등록 및 수정
-- [ ] 공동구매 신청
-- [ ] 상품 검색
-- [ ] 내 정보 확인
-  - [ ] 구매 이력 확인 (진행 상태 확인)
-- [ ] 알림 기능
-  - [ ] 구매 시작 알림 (공구 진행자)
-  - [ ] 구매 확정 알림 (공구 참여자)
+- [X] 상품 등록 & 수정 & 취소
+- [X] 공동구매 신청 & 취소
+- [X] 상품 검색
+- [X] 내 정보 확인
+  - [X] 등록 상품 확인 (진행 상태 확인)
+  - [X] 구매 이력 확인 (진행 상태 확인)
 
 > 관리자 (Back Office)
-- [ ] 회원 관리
-- [ ] 카테고리 관리
-- [ ] 상품 관리
+- [X] 회원 관리
+- [X] 카테고리 관리
+- [X] 상품 관리
 <br/>
 
 ------------
+
+## 🪟 Project Structure
+### | 구현 및 배포 작업 처리 과정
+![STRUCTURE](/src/main/resources/static/img/structure.jpg)
+<br/>
+
 
 ## 📚 ERD
 ![ERD](/src/main/resources/static/img/ERD.jpg)
@@ -64,11 +68,6 @@
 <br/>
 
 
-## 🪟 Project Structure
-> 추후 변경
-<br/>
-
-
 ## 🎯 Trouble Shooting
-> 추후 변경
+> [N-BUY : 트러블 슈팅](https://agate-lady-913.notion.site/Trouble-Shooting-015fd9304ffd476d98b47c64b1dfe27e)
 <br/>
