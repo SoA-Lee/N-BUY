@@ -2,6 +2,7 @@ package com.dalgorithm.nbuy.admin.controller;
 
 import com.dalgorithm.nbuy.admin.dto.CategoryDto;
 import com.dalgorithm.nbuy.admin.service.CategoryService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ public class AdminCategoryController {
 
     private final CategoryService categoryService;
 
+    @ApiOperation(value = "카테고리 리스트 정렬하기")
     @GetMapping()
     public String listCategory(Model model) {
 
@@ -28,6 +30,7 @@ public class AdminCategoryController {
     }
 
 
+    @ApiOperation(value = "입력한 문자열로 카테고리 생성하기")
     @PostMapping("/add")
     public String addCategory(String categoryName) {
 
@@ -36,6 +39,7 @@ public class AdminCategoryController {
         return "redirect:/admin/categories";
     }
 
+    @ApiOperation(value = "선택한 카테고리 삭제하기")
     @PostMapping("/delete")
     public String deleteCategory(CategoryDto categoryDto) {
 
@@ -44,6 +48,7 @@ public class AdminCategoryController {
         return "redirect:/admin/categories";
     }
 
+    @ApiOperation(value = "선택한 카테고리 수정하기")
     @PostMapping("/update")
     public String updateCategory(CategoryDto categoryDto) {
 

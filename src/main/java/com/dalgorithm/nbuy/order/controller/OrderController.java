@@ -2,6 +2,7 @@ package com.dalgorithm.nbuy.order.controller;
 
 import com.dalgorithm.nbuy.order.entity.OrderInput;
 import com.dalgorithm.nbuy.order.service.OrderService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @ApiOperation(value = "같이구매 주문 신청하기")
     @PostMapping("/request")
     public String orderReq(@RequestBody OrderInput parameter
             , Principal principal) {
@@ -30,6 +32,7 @@ public class OrderController {
         return "index";
     }
 
+    @ApiOperation(value = "같이구매 주문 취소하기")
     @PostMapping("/cancel")
     public String orderCancel(@RequestBody OrderInput parameter
             , Principal principal) {

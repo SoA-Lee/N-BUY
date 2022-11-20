@@ -5,6 +5,7 @@ import com.dalgorithm.nbuy.admin.service.CategoryService;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
 import com.dalgorithm.nbuy.product.dto.ProductParam;
 import com.dalgorithm.nbuy.product.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,8 @@ public class AdminProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
+
+    @ApiOperation(value = "관리자 - 상품 목록 확인하기")
     @GetMapping
     public String productList(Model model, @PageableDefault(size = 5, sort = "id",
             direction = Sort.Direction.DESC ) Pageable pageable, ProductParam productParam) {
@@ -35,6 +38,7 @@ public class AdminProductController {
         return "admin/product/list";
     }
 
+    @ApiOperation(value = "관리자 - 상품 삭제하기")
     @PostMapping("/delete")
     public String productDelete(Model model, ProductParam productParam) {
 

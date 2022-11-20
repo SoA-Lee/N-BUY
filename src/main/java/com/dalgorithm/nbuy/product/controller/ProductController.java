@@ -8,6 +8,7 @@ import com.dalgorithm.nbuy.product.dto.ProductFormDto;
 import com.dalgorithm.nbuy.product.dto.ProductParam;
 import com.dalgorithm.nbuy.product.entity.Product;
 import com.dalgorithm.nbuy.product.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
+    @ApiOperation(value = "상품 목록 보기")
     @GetMapping("/list")
     public String productList(Model model, @PageableDefault(size = 5, sort = "id",
             direction = Sort.Direction.DESC ) Pageable pageable, ProductParam productParam) {
@@ -41,6 +43,7 @@ public class ProductController {
         return "product/list";
     }
 
+    @ApiOperation(value = "상품 추가 페이지 요청하기")
     @GetMapping("/new")
     public String productAdd(Model model, HttpServletRequest request
             , ProductFormDto productFormDto) {
@@ -66,6 +69,7 @@ public class ProductController {
         return "product/add";
     }
 
+    @ApiOperation(value = "상품 추가하기")
     @PostMapping("/new")
     public String productAddSubmit(@Valid ProductFormDto productFormDto,
                                    Model model, Principal principal) {
@@ -79,6 +83,7 @@ public class ProductController {
         return "index";
     }
 
+    @ApiOperation(value = "상품 상세 정보 확인하기")
     @GetMapping("/detail/{id}")
     public String productDetail(Model model, ProductParam productParam, Principal principal) {
 
@@ -91,6 +96,7 @@ public class ProductController {
         return "product/detail";
     }
 
+    @ApiOperation(value = "상품 등록 취소하기", notes = "상품이 완벽히 삭제되는 것이 아닌, 상품 상태가 변경된다.")
     @PostMapping("/cancel")
     public String productCancel(Model model, ProductParam productParam, Principal principal) {
 
@@ -100,6 +106,7 @@ public class ProductController {
         return "index";
     }
 
+    @ApiOperation(value = "상품 검색하기")
     @GetMapping("/search")
     public String searchByName(@RequestParam String productTitle, Model model){
 

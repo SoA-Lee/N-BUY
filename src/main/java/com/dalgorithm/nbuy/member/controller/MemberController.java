@@ -9,6 +9,7 @@ import com.dalgorithm.nbuy.order.dto.OrderDto;
 import com.dalgorithm.nbuy.order.service.OrderService;
 import com.dalgorithm.nbuy.product.dto.ProductDto;
 import com.dalgorithm.nbuy.product.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -33,16 +34,19 @@ public class MemberController {
     private final OrderService orderService;
     private final ProductService productService;
 
+    @ApiOperation(value = "로그인하기")
     @RequestMapping("/login")
     public String login() {
         return "member/login";
     }
 
+    @ApiOperation(value = "회원가입 페이지 요청하기")
     @GetMapping("/register")
     public String register() {
         return "member/register";
     }
 
+    @ApiOperation(value = "회원가입하기", notes = "MemberDto")
     @PostMapping("/register")
     public String registerSubmit(@Valid MemberFormDto memberFormDto,
                                  BindingResult bindingResult, Model model) {
@@ -63,6 +67,7 @@ public class MemberController {
         return "index";
     }
 
+    @ApiOperation(value = "이메일 인증하기")
     @GetMapping("/email_auth")
     public String emailAuth(HttpServletRequest request) {
 
@@ -74,6 +79,7 @@ public class MemberController {
         return "member/email_auth";
     }
 
+    @ApiOperation(value = "마이페이지 요청하기")
     @GetMapping("/info")
     public String memberInfo(Model model, Principal principal) {
 
@@ -84,6 +90,7 @@ public class MemberController {
 
         return "member/info";
     }
+    @ApiOperation(value = "마이페이지 - 회원 정보 수정하기", notes = "MemberDto")
 
     @PostMapping("/info")
     public String memberInfoSubmit(MemberDto memberDto, Principal principal) {
@@ -96,11 +103,13 @@ public class MemberController {
         return "redirect:/members/info";
     }
 
+    @ApiOperation(value = "탈퇴 페이지 요청하기")
     @GetMapping("/withdraw")
     public String memberWithdraw() {
         return "member/withdraw";
     }
 
+    @ApiOperation(value = "탈퇴하기")
     @PostMapping("/withdraw")
     public String memberWithdrawSubmit(Model model
             , MemberDto memberDto, Principal principal) {
@@ -118,6 +127,7 @@ public class MemberController {
         return "redirect:/members/logout";
     }
 
+    @ApiOperation(value = "마이페이지 - 모집 상태 확인하기")
     @GetMapping("/recruit_status")
     public String checkMyRecruit(Model model, Principal principal) {
         String recruiterId = principal.getName();
@@ -127,6 +137,7 @@ public class MemberController {
         return "member/my_recruit";
     }
 
+    @ApiOperation(value = "마이페이지 - 주문 상태 확인하기")
     @GetMapping("/apply_status")
     public String checkMyApply(Model model, Principal principal) {
         String applicantId = principal.getName();

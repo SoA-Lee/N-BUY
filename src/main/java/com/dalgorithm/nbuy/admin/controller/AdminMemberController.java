@@ -4,6 +4,7 @@ import com.dalgorithm.nbuy.admin.entity.MemberParam;
 import com.dalgorithm.nbuy.member.dto.MemberDto;
 import com.dalgorithm.nbuy.member.entity.Member;
 import com.dalgorithm.nbuy.member.service.MemberService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public class AdminMemberController {
 
     private final MemberService memberService;
 
+    @ApiOperation(value = "관리자 - 회원 검색하기", notes = "사용자 이메일과 관련된 키워드로 검색한다.")
     @GetMapping
     public String searchMember(Model model, String keyword, @PageableDefault(size = 5, sort = "userId",
             direction = Sort.Direction.DESC) Pageable pageable) {
@@ -39,6 +41,7 @@ public class AdminMemberController {
         return "admin/member/list";
     }
 
+    @ApiOperation(value = "관리자 - 회원 정보 상세 보기")
     @GetMapping("/detail")
     public String memberDetail(Model model, MemberParam memberParam) {
 
@@ -48,6 +51,7 @@ public class AdminMemberController {
         return "admin/member/detail";
     }
 
+    @ApiOperation(value = "관리자 - 회원 정보 수정하기", notes = "사용자의 이용상태 변경이 가능하다.")
     @PostMapping("/status")
     public String updateMemberStatus(MemberDto memberDto) {
 
